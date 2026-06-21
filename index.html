@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#020617">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>ארגז כלים הנדסי</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icon.png">
+    
+    <style>
+        :root {
+            --bg-color: #020617; /* Slate 950 */
+            --glass-bg: rgba(15, 23, 42, 0.7); /* Slate 900 transparent */
+            --glass-border: rgba(51, 65, 85, 0.5); /* Slate 700 transparent */
+            --accent: #f59e0b; /* Amber 500 */
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            background-color: var(--bg-color);
+            color: #f8fafc;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* רקע דינמי עם תאורה עדינה */
+        .app-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(245, 158, 11, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.05), transparent 25%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* שדות הזנה מותאמים למובייל (16px מינימום מונע זום בiOS) */
+        .input-field, select {
+            background-color: rgba(2, 6, 23, 0.6);
+            border: 1px solid #334155;
+            color: #f1f5f9;
+            font-size: 16px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-field:focus, select:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+            background-color: rgba(2, 6, 23, 0.9);
+        }
+
+        /* כפתורים עם משוב למגע */
+        .btn-amber {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #020617;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px -2px rgba(245, 158, 11, 0.4);
+        }
+        .btn-amber:active { transform: scale(0.97); }
+
+        .btn-slate-outline {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid #334155;
+            color: #cbd5e1;
+            transition: all 0.2s ease;
+        }
+        .btn-slate-outline:hover { background: rgba(30, 41, 59, 0.8); border-color: #475569; color: #fff; }
+        .btn-slate-outline:active { transform: scale(0.97); }
+
+        /* סגנון CAD מתקדם ויחסי (Responsive SVG) */
+        .tech-illustration {
+            border: 1px solid #1e293b;
+            background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0,0,0,1);
+            /* aspect-ratio שומר על פרופורציות במובייל בלי לקבוע גובה קשיח */
+        }
+
+        .tech-grid-bg {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 15px 15px;
+            opacity: 0.7;
+        }
+
+        .svg-label { font-family: 'Courier New', Courier, monospace; font-weight: bold; }
+        .cad-text-dim { fill: #f59e0b; }
+        .cad-text-obj { fill: #ffffff; }
+        .cad-line-main { stroke: #ffffff; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        .cad-line-dim { stroke: #3b82f6; stroke-width: 0.75; stroke-dasharray: 3, 3; fill: none; }
+        .cad-line-center { stroke: #eab308; stroke-width: 0.75; stroke-dasharray: 8, 3, 2, 3; fill: none; }
+        .cad-fill-shade { fill: rgba(30, 41, 59, 0.8); }
+        .cad-weld-fill { fill: #f59e0b; opacity: 0.25; stroke: #f59e0b; stroke-width: 0.5; }
+
+        /* מחשבון פשוט */
+        .simple-calc-display { background: #020617; border: 1px solid #1e293b; box-shadow: inset 0 4px 10px rgba(0,0,0,0.5); }
+        .simple-calc-btn { background: #1e293b; border: 1px solid #334155; box-shadow: 0 4px 0 #0f172a; transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1); }
+        .simple-calc-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0f172a; }
+        .simple-calc-btn-op { background: #f59e0b; color: #020617; border-color: #d97706; box-shadow: 0 4px 0 #b45309; }
+        .simple-calc-btn-op:active { transform: translateY(4px); box-shadow: 0 0 0 #b45309; }
+
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        /* אנימציית מעבר בין מסכים */
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+    <div class="app-bg"></div>
+
+    <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto flex flex-col items-center justify-center p-4 gap-2 text-center">
+            <div class="bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 px-4 py-2 rounded-xl font-black text-xl sm:text-2xl tracking-wider shadow-lg">
+                ארגז כלים לרתך ולמסגר
+            </div>
+            <div>
+                <h1 class="text-sm sm:text-base font-bold tracking-tight text-white leading-tight">נוצר על ידי <span class="text-amber-400">צוות פלדעטק</span></h1>
+                <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">פתרונות חישוב ותכנון מקצועיים</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-4 sm:p-6 w-full flex-grow flex items-start justify-center pb-12">
+
+        <div id="mainMenu" class="calculator-view glass-card p-5 sm:p-8 rounded-3xl w-full max-w-2xl fade-in">
+            <h2 class="text-lg sm:text-xl font-bold text-center mb-6 text-slate-200">בחר כלי עבודה</h2>
+            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                <button onclick="showView('simpleCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                    <span class="text-2xl sm:text-3xl">🔢</span>
+                    <span class="font-bold text-white text-sm">מחשבון פשוט</span>
+                </button>
+                <button onclick="showView('diagonalCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                    <span class="text-2xl sm:text-3xl">🔳</span>
+                    <span class="font-bold text-white text-sm">מחשבון דיאגונל</span>
+                </button>
+                <button onclick="showView('rectDrawCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                    <span class="text-2xl sm:text-3xl">📐</span>
+                    <span class="font-bold text-white text-sm">תכנון חיתוך</span>
+                </button>
+                <button onclick="showView('weightCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                    <span class="text-2xl sm:text-3xl">⚖️</span>
+                    <span class="font-bold text-white text-sm">משקל חומרים</span>
+                </button>
+                <button onclick="showView('weldCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                    <span class="text-2xl sm:text-3xl">🔥</span>
+                    <span class="font-bold text-white text-sm">חומר רתך</span>
+                </button>
+                <button onclick="showView('miterCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                    <span class="text-2xl sm:text-3xl">📐</span>
+                    <span class="font-bold text-white text-sm">חיתוך זוויות לפרופילים</span>
+                </button>
+                <button onclick="showView('stairCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                    <span class="text-2xl sm:text-3xl">🪜</span>
+                    <span class="font-bold text-white text-sm">תכנון מדרגות</span>
+                </button>
+                <button onclick="showView('spacingCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                    <span class="text-2xl sm:text-3xl">📏</span>
+                    <span class="font-bold text-white text-sm">חלוקה שווה</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="simpleCalc" class="calculator-view hidden glass-card p-5 sm:p-6 rounded-3xl w-full max-w-sm fade-in">
+            <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
+                <span>←</span> חזרה לתפריט
+            </button>
+            <div class="w-full mb-5 rounded-2xl simple-calc-display p-4">
+                <div id="calcHistory" dir="ltr" class="calc-history text-left text-xs text-slate-500 font-mono h-20 overflow-y-auto mb-2 border-b border-slate-800/50 pb-2 scroll-smooth"></div>
+                <div id="calcDisplay" dir="ltr" class="text-left text-4xl font-mono text-amber-400 overflow-x-auto min-h-[48px] flex items-center justify-start tracking-tight">0</div>
+            </div>
+            <div id="calcButtons" class="grid grid-cols-4 gap-3">
+                <button data-action="clear" class="simple-calc-btn p-4 text-lg font-bold text-rose-500 rounded-2xl">C</button>
+                <button data-action="delete" class="simple-calc-btn p-4 text-lg font-bold text-slate-300 rounded-2xl">⌫</button>
+                <button data-action="percent" class="simple-calc-btn p-4 text-lg font-bold text-slate-300 rounded-2xl">%</button>
+                <button data-action="operator" data-value="/" class="simple-calc-btn simple-calc-btn-op p-4 text-xl font-bold rounded-2xl">÷</button>
+                <button data-action="number" data-value="7" class="simple-calc-btn p-4 text-xl font-bold text-slate-100 rounded-2xl">7</button>
+                <button data-action="number" data-value="8" class="simple-calc-btn p-4 text-xl font-bold text-slate-100 rounded-2xl">8</button>
+                <button data-action="number" data-value="9" class="simple-calc-btn p-4 text-xl font-bold text-slate-100 rounded-2xl">9</button>
+                <button data-action="operator" data-value="*" class="simple-calc-btn simple-calc-btn-op p-4 text-xl font-bold rounded-2xl">×</button>
+                <button data-action="number" data-value="4" class="simple-calc-btn p-4 text-xl font-bold text-slate-100 rounded-2xl">4</button>
+                <button data-action="number" data-value="5" class="simple-calc-btn p-4 text-xl font-bold text-slate-100 rounded-2xl">5</button>
+                <button data-action="number" data-value="6" class="simple-calc-btn p-4 text-xl font-bold text-slate-100 rounded-2xl">6</button>
+                <button data-action="operator" data-value="-" class="simple-calc-btn simple-calc-btn-op p-4 text-xl font-bold rounded-2xl">−</button>
+                <button data-action="number" data-value="1" class="simple-calc-btn p-4 text-xl font-bold text-slate-100 rounded-2xl">1</button>
+                <button data-action="number" data-value="2" class="simple-calc-btn p-4 text-xl font-bold text-slate-100 rounded-2xl">2</button>
+                <button data-action="number" data-value="3" class="simple-calc-btn p-4 text-xl font-bold text-slate-100 rounded-2xl">3</button>
+                <button data-action="operator" data-value="+" class="simple-calc-btn simple-calc-btn-op p-4 text-xl font-bold rounded-2xl">+</button>
+                <button data-action="number" data-value="0" class="simple-calc-btn p-4 text-xl font-bold text-slate-100 rounded-2xl col-span-2">0</button>
+                <button data-action="decimal" data-value="." class="simple-calc-btn p-4 text-xl font-bold text-slate-100 rounded-2xl">.</button>
+                <button data-action="pyth_exec" class="simple-calc-btn simple-calc-btn-op p-4 text-lg font-bold rounded-2xl" title="פיתגורס">◺</button>
+                <button data-action="equals" class="simple-calc-btn p-4 text-2xl font-bold bg-amber-500 text-slate-950 border-amber-600 rounded-2xl shadow-[0_4px_0_#b45309] active:shadow-[0_0_0_#b45309]">=</button>
+            </div>
+        </div>
+
+        <div id="diagonalCalc" class="calculator-view hidden glass-card p-5 sm:p-8 rounded-3xl w-full max-w-lg fade-in">
+            <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
+                <span>←</span> חזרה
+            </button>
+            <h2 class="text-xl font-bold text-white mb-4">מחשבון דיאגונל</h2>
+            
+            <div class="tech-illustration p-4 mb-6 flex items-center justify-center aspect-video w-full">
+                <div class="tech-grid-bg absolute inset-0"></div>
+                <svg id="diagonalSvg" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" class="w-full h-full z-10 drop-shadow-md">
+                </svg>
+            </div>
+
+            <form id="diagonalForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">רוחב (mm)</label>
+                        <input type="number" step="any" id="diagWidth" required class="w-full p-3.5 input-field rounded-xl font-mono text-center">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">גובה (mm)</label>
+                        <input type="number" step="any" id="diagHeight" required class="w-full p-3.5 input-field rounded-xl font-mono text-center">
+                    </div>
+                </div>
+            </form>
+            <div id="diagonalResultContainer" class="hidden mt-6 bg-slate-900/80 border border-slate-700/50 p-5 rounded-2xl text-center shadow-inner">
+                <p class="text-xs text-slate-400 mb-1">אורך דיאגונל מחושב:</p>
+                <div class="flex items-center justify-center gap-2">
+                    <span id="diagonalResult" class="text-4xl sm:text-5xl font-mono font-black text-amber-400 drop-shadow-md">0</span>
+                    <span class="text-lg text-slate-500">mm</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="rectDrawCalc" class="calculator-view hidden glass-card p-5 sm:p-8 rounded-3xl w-full max-w-lg fade-in">
+            <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
+                <span>←</span> חזרה
+            </button>
+            <h2 class="text-xl font-bold text-white mb-4">תכנון חיתוך (טריגונומטריה)</h2>
+            
+            <div class="tech-illustration p-4 mb-6 flex items-center justify-center aspect-video w-full">
+                <div class="tech-grid-bg absolute inset-0"></div>
+                <svg id="rectDrawSvg" viewBox="0 0 200 150" class="w-full h-full z-10 drop-shadow-md">
+                </svg>
+            </div>
+
+            <form id="rectDrawForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">צלע נתונה</label>
+                        <select id="rectDrawInputSide" class="w-full p-3.5 rounded-xl input-field font-medium">
+                            <option value="a">רוחב (W)</option>
+                            <option value="b">גובה (H)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">אורך (mm)</label>
+                        <input type="number" step="any" id="rectDrawSideLength" required class="w-full p-3.5 input-field rounded-xl font-mono text-center">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">זווית חיתוך (A°)</label>
+                    <div class="relative">
+                        <input type="number" step="any" id="rectDrawAngle" required class="w-full p-3.5 input-field rounded-xl font-mono text-center">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-mono">°</span>
+                    </div>
+                </div>
+            </form>
+            <div id="rectDrawResultContainer" class="hidden mt-6 bg-slate-900/80 border border-slate-700/50 p-4 rounded-2xl shadow-inner">
+                <div class="grid grid-cols-3 gap-2 text-center font-mono">
+                    <div class="border-l border-slate-800/80">
+                        <span class="text-[10px] text-slate-500 block mb-1">רוחב (W)</span>
+                        <span id="resA" class="font-bold text-amber-400 text-lg sm:text-xl">0</span>
+                    </div>
+                    <div class="border-l border-slate-800/80">
+                        <span class="text-[10px] text-slate-500 block mb-1">גובה (H)</span>
+                        <span id="resB" class="font-bold text-blue-400 text-lg sm:text-xl">0</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-slate-500 block mb-1">אלכסון (C)</span>
+                        <span id="resC" class="font-bold text-white text-lg sm:text-xl">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="weightCalc" class="calculator-view hidden glass-card p-5 sm:p-8 rounded-3xl w-full max-w-lg fade-in">
+            <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
+                <span>←</span> חזרה
+            </button>
+            <h2 class="text-xl font-bold text-white mb-6">משקל חומרים</h2>
+            
+            <div class="tech-illustration p-4 mb-6 flex items-center justify-center min-h-[160px] sm:min-h-[200px] w-full">
+                <div class="tech-grid-bg absolute inset-0"></div>
+                <svg id="weightSvg" class="w-full h-full z-10 drop-shadow-md"></svg>
+            </div>
+
+            <form id="weightForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-2">סוג חישוב</label>
+                        <select id="weightMode" class="w-full p-3.5 rounded-xl input-field font-medium text-sm">
+                            <option value="plate">פח / מלבני / מלא</option>
+                            <option value="beam">קורות מבניות (HEB, IPN..)</option>
+                        </select>
+                    </div>
+                    <div id="weightMatContainer">
+                        <label class="block text-sm text-slate-400 mb-2">חומר אם</label>
+                        <select id="mat" class="w-full p-3.5 rounded-xl input-field font-medium text-sm">
+                            <option value="2.7">אלומיניום</option>
+                            <option value="7.85" selected>פלדה</option>
+                            <option value="8.0">נירוסטה</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="weightPlateInputs" class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1">אורך (mm)</label>
+                        <input type="number" id="wL" class="w-full p-3.5 input-field rounded-xl font-mono text-center" value="1000">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1">רוחב (mm)</label>
+                        <input type="number" id="wW" class="w-full p-3.5 input-field rounded-xl font-mono text-center">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1">עובי (mm)</label>
+                        <input type="number" id="wD" class="w-full p-3.5 input-field rounded-xl font-mono text-center">
+                    </div>
+                </div>
+
+                <div id="weightBeamInputs" class="grid grid-cols-3 gap-3 hidden">
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1">פרופיל</label>
+                        <select id="beamType" class="w-full p-3.5 input-field rounded-xl font-mono text-center">
+                            <option value="HEB">HEB</option>
+                            <option value="IPE">IPE</option>
+                            <option value="IPN">IPN</option>
+                            <option value="UNP">UNP</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1">מידה</label>
+                        <select id="beamSize" class="w-full p-3.5 input-field rounded-xl font-mono text-center"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1">אורך (mm)</label>
+                        <input type="number" id="beamL" class="w-full p-3.5 input-field rounded-xl font-mono text-center" value="1000">
+                    </div>
+                </div>
+            </form>
+            <div id="weightRes" class="hidden mt-6 bg-slate-900/80 border border-slate-700/50 p-6 rounded-2xl text-center shadow-inner">
+                <p class="text-xs text-slate-500 mb-1">משקל מחושב:</p>
+                <div class="flex items-center justify-center gap-2">
+                    <span id="resW" class="text-4xl sm:text-5xl font-mono font-black text-amber-400 drop-shadow-md">0</span>
+                    <span class="text-lg text-slate-600">kg</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="weldCalc" class="calculator-view hidden glass-card p-4 sm:p-8 rounded-3xl w-full max-w-4xl fade-in">
+            <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
+                <span>←</span> חזרה
+            </button>
+            <h2 class="text-xl font-bold text-white mb-6">מחשבון כמות חומר רתך</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <div class="space-y-6">
+                    <div class="bg-slate-900/80 border border-slate-700/50 p-4 sm:p-5 rounded-2xl shadow-inner">
+                        <h3 class="font-bold text-amber-500 border-b border-slate-800 pb-2 mb-4">חומר ותהליך</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">חומר אם</label>
+                                <select id="weldMat" class="w-full p-2.5 rounded-lg input-field text-sm">
+                                    <option value="7.85">פלדה</option>
+                                    <option value="2.70">אלומיניום</option>
+                                    <option value="7.90">נירוסטה</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">תהליך</label>
+                                <select id="weldProc" class="w-full p-2.5 rounded-lg input-field text-sm">
+                                    <option value="smaw">אלקטרודה</option>
+                                    <option value="gmaw">מיג</option>
+                                    <option value="fcaw">חוט ממולא</option>
+                                    <option value="gtaw">טיג</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">חומר רתך</label>
+                                <select id="weldFiller" class="w-full p-2.5 rounded-lg input-field text-sm"></select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">עובי חחוט/אלקט'</label>
+                                <select id="weldDia" class="w-full p-2.5 rounded-lg input-field text-sm font-mono"></select>
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-[11px] text-slate-400 mb-1">משקל מארז (kg)</label>
+                                <input type="number" id="weldPackWeight" min="0.1" step="0.1" value="5" class="w-full p-2.5 input-field rounded-lg text-sm font-mono text-center">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/80 border border-slate-700/50 p-4 sm:p-5 rounded-2xl shadow-inner">
+                        <h3 class="font-bold text-amber-500 border-b border-slate-800 pb-2 mb-4">מידות התפר</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">סוג חיבור</label>
+                                <select id="weldJoint" class="w-full p-2.5 rounded-lg input-field text-sm">
+                                    <option value="fillet">פינה (Fillet)</option>
+                                    <option value="v_groove">פאזה (V-Groove)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">אורך (m)</label>
+                                <input type="number" id="weldLen" min="0" step="0.1" value="1" class="w-full p-2.5 input-field rounded-lg text-sm font-mono text-center">
+                            </div>
+                            <div class="col-span-2">
+                                <label id="weldSizeLabel" class="block text-[11px] text-slate-400 mb-1">מידת ניצב (mm)</label>
+                                <input type="number" id="weldSize" min="0" step="0.5" value="5" class="w-full p-2.5 input-field rounded-lg text-sm font-mono text-center">
+                            </div>
+                            <div id="vGrooveParams" class="col-span-2 grid grid-cols-2 gap-3 hidden">
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">מרווח שורש (mm)</label>
+                                    <input type="number" id="weldGap" min="0" step="0.5" value="2" class="w-full p-2.5 input-field rounded-lg text-sm font-mono text-center">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">זווית (deg)</label>
+                                    <input type="number" id="weldAngle" min="0" step="1" value="60" class="w-full p-2.5 input-field rounded-lg text-sm font-mono text-center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="bg-slate-900/80 border border-slate-700/50 p-4 sm:p-5 rounded-2xl shadow-inner">
+                        <h3 class="font-bold text-amber-500 border-b border-slate-800 pb-2 mb-4">חתך ריתוך</h3>
+                        <div class="tech-illustration flex items-center justify-center w-full aspect-[2/1] relative">
+                            <div class="tech-grid-bg absolute inset-0"></div>
+                            <div id="weldSvgContainer" class="w-full h-full z-10 flex items-center justify-center p-2"></div>
+                        </div>
+                        <div id="resWeldThroatContainer" class="mt-3 text-center text-xs text-slate-400">
+                            צוואר (Throat): <span id="resWeldThroat" class="font-mono text-white font-bold">3.5 mm</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 border border-amber-500/20 p-5 rounded-2xl text-center relative overflow-hidden">
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 bg-amber-500/10 rounded-full blur-[40px] pointer-events-none"></div>
+                        <h3 class="font-bold text-amber-500 border-b border-slate-800 pb-2 mb-4 relative z-10">תוצאה</h3>
+                        <div class="relative z-10 mb-4">
+                            <span class="block text-slate-400 text-[11px] mb-1">חומר נדרש (ברוטו)</span>
+                            <span id="resWeldReq" class="text-4xl font-black text-amber-400 font-mono drop-shadow-md">0.00 kg</span>
+                        </div>
+                        <div class="relative z-10 grid grid-cols-2 gap-4 border-t border-slate-800/80 pt-4">
+                            <div>
+                                <span class="block text-slate-500 text-[10px] mb-0.5">יעילות</span>
+                                <span id="resWeldEff" class="text-lg font-bold text-slate-200 font-mono">0%</span>
+                            </div>
+                            <div>
+                                <span class="block text-slate-500 text-[10px] mb-0.5">מארזים</span>
+                                <span id="resWeldPacks" class="text-lg font-bold text-slate-200 font-mono">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="miterCalc" class="calculator-view hidden flex-col w-full fade-in">
+            <div class="w-full max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-12">
+                    <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm active:scale-95 transition-transform">
+                        <span>←</span> חזרה לתפריט
+                    </button>
+                </div>
+                
+                <section class="lg:col-span-5 glass-card p-5 sm:p-6 rounded-3xl flex flex-col gap-5 h-fit">
+                    <h2 class="text-xl font-bold text-white border-b border-slate-800 pb-3">חיתוך זוויות לפרופילים</h2>
+                    <div class="grid grid-cols-2 gap-2 bg-slate-900/80 p-1.5 rounded-xl border border-slate-800/50 shadow-inner">
+                        <button id="cutTypeEqual" onclick="setCutType(true)" class="py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all btn-amber">
+                            פרופילים שווים
+                        </button>
+                        <button id="cutTypeUnequal" onclick="setCutType(false)" class="py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all text-slate-400 hover:text-white">
+                            פרופילים שונים
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4 border-t border-slate-800/50 pt-4">
+                        <div>
+                            <label class="block text-xs sm:text-sm text-slate-400 mb-2">זווית פינה (θ)</label>
+                            <div class="relative">
+                                <input type="number" id="cornerAngle" min="20" max="160" value="90" oninput="calculateMiter()" class="w-full p-3.5 bg-slate-900 border border-slate-700 rounded-xl text-center font-mono text-xl sm:text-2xl text-amber-500 focus:outline-none focus:border-amber-500 transition-colors shadow-inner">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-mono text-base">°</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <div id="widthAContainer" class="flex-1">
+                                <label id="widthALabel" class="block text-xs sm:text-sm text-slate-400 mb-2">רוחב פרופיל</label>
+                                <input type="number" id="widthA" min="1" value="50" oninput="calculateMiter()" class="w-full p-3.5 bg-slate-900 border border-slate-700 rounded-xl text-center font-mono text-xl sm:text-2xl text-white focus:outline-none focus:border-amber-500 transition-colors shadow-inner">
+                            </div>
+                            <div id="widthBContainer" class="flex-1 hidden">
+                                <label class="block text-xs sm:text-sm text-slate-400 mb-2">פרופיל ב'</label>
+                                <input type="number" id="widthB" min="1" value="80" oninput="calculateMiter()" class="w-full p-3.5 bg-slate-900 border border-slate-700 rounded-xl text-center font-mono text-xl sm:text-2xl text-white focus:outline-none focus:border-amber-500 transition-colors shadow-inner">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="lg:col-span-7 flex flex-col gap-4 sm:gap-6">
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                        <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-700/50 text-center shadow-inner">
+                            <span class="text-[10px] sm:text-xs text-slate-500 block mb-1">מסור - פרופיל א'</span>
+                            <h3 class="text-2xl sm:text-3xl font-mono font-black text-white mb-1 drop-shadow-sm" id="angleAResult">45.0°</h3>
+                            <span class="text-[10px] text-slate-500 block">זווית קצה: <span id="internalAResult" class="text-emerald-400 font-mono font-bold">45.0°</span></span>
+                        </div>
+                        <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-700/50 text-center shadow-inner">
+                            <span class="text-[10px] sm:text-xs text-slate-500 block mb-1">מסור - פרופיל ב'</span>
+                            <h3 class="text-2xl sm:text-3xl font-mono font-black text-white mb-1 drop-shadow-sm" id="angleBResult">45.0°</h3>
+                            <span class="text-[10px] text-slate-500 block">זווית קצה: <span id="internalBResult" class="text-emerald-400 font-mono font-bold">45.0°</span></span>
+                        </div>
+                    </div>
+
+                    <div class="tech-illustration flex items-center justify-center w-full aspect-square max-h-[60vh] sm:aspect-video relative">
+                        <div class="tech-grid-bg absolute inset-0"></div>
+                        <svg id="miterSvg" class="w-full h-full z-10 p-2 overflow-visible"></svg>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div id="stairCalc" class="calculator-view hidden glass-card p-5 sm:p-8 rounded-3xl w-full max-w-lg fade-in">
+            <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
+                <span>←</span> חזרה
+            </button>
+            <h2 class="text-xl font-bold text-white mb-4">תכנון מדרגות (תקן)</h2>
+            
+            <div class="tech-illustration p-4 mb-6 flex items-center justify-center aspect-video w-full">
+                <div class="tech-grid-bg absolute inset-0"></div>
+                <svg viewBox="0 0 100 60" class="w-full h-full z-10 drop-shadow-md">
+                    <path d="M 10 50 L 10 30 L 45 30 L 45 10 L 80 10" class="cad-line-main" />
+                    <path d="M 45 30 L 52 30" class="cad-line-dim" />
+                    <text x="6" y="40" class="svg-label cad-text-dim" transform="rotate(-90, 6, 40)" text-anchor="middle">Riser</text>
+                    <text x="27" y="27" class="svg-label cad-text-dim" text-anchor="middle">Tread</text>
+                    <text x="48" y="27" class="svg-label cad-text-obj">Nose</text>
+                </svg>
+            </div>
+
+            <form id="stairForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">גובה המפלס (cm)</label>
+                    <input type="number" step="any" id="stairH" required class="w-full p-3.5 input-field rounded-xl font-mono text-center">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">מספר מדרגות</label>
+                        <input type="number" id="stairN" class="w-full p-3.5 input-field rounded-xl font-mono text-center" placeholder="אוטומטי">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">רום רצוי (cm)</label>
+                        <input type="number" step="any" id="stairR" class="w-full p-3.5 input-field rounded-xl font-mono text-center" placeholder="~17">
+                    </div>
+                </div>
+                <button type="submit" class="w-full btn-amber p-4 rounded-xl mt-4">חשב מהלך</button>
+            </form>
+
+            <div id="stairResultContainer" class="hidden mt-6 bg-slate-900/80 border border-slate-700/50 p-5 rounded-2xl space-y-3 font-mono text-sm shadow-inner">
+                <div class="flex justify-between border-b border-slate-800/80 pb-2">
+                    <span class="text-slate-500">שלבים (N):</span>
+                    <span id="resSN" class="font-bold text-white text-lg">0</span>
+                </div>
+                <div class="flex justify-between border-b border-slate-800/80 pb-2">
+                    <span class="text-slate-500">רום (R):</span>
+                    <span id="resSR" class="font-bold text-amber-400 text-lg">0 cm</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">שלח (T):</span>
+                    <span id="resST" class="font-bold text-blue-400 text-lg">0 cm</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="spacingCalc" class="calculator-view hidden glass-card p-5 sm:p-8 rounded-3xl w-full max-w-lg fade-in">
+            <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
+                <span>←</span> חזרה
+            </button>
+            <h2 class="text-xl font-bold text-white mb-4">חלוקת רווחים</h2>
+            
+            <div class="tech-illustration p-4 mb-6 flex items-center justify-center aspect-video w-full">
+                <div class="tech-grid-bg absolute inset-0"></div>
+                <svg id="spacingSvg" viewBox="0 0 100 45" class="w-full h-full z-10 drop-shadow-md">
+                    <rect x="5" y="10" width="90" height="25" class="cad-line-dim"/>
+                    <text x="50" y="25" class="svg-label cad-text-dim" text-anchor="middle">Ready for Input</text>
+                </svg>
+            </div>
+
+            <form id="spacingForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">רוחב הפתח (mm)</label>
+                    <input type="number" step="any" id="spaceTotalW" required class="w-full p-3.5 input-field rounded-xl font-mono text-center">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">עובי ניצב (mm)</label>
+                        <input type="number" step="any" id="spaceMatW" required class="w-full p-3.5 input-field rounded-xl font-mono text-center">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">כמות ניצבים</label>
+                        <input type="number" id="spaceNumPickets" required class="w-full p-3.5 input-field rounded-xl font-mono text-center">
+                    </div>
+                </div>
+                <div>
+                    <select id="spaceType" class="w-full p-3.5 rounded-xl input-field text-sm">
+                        <option value="withEdges">מרווח בקצוות (הניצבים בפנים)</option>
+                        <option value="noEdges">ללא מרווח קצה (ניצב צמוד למסגרת)</option>
+                    </select>
+                </div>
+            </form>
+
+            <div id="spacingResultContainer" class="hidden mt-6 bg-slate-900/80 border border-slate-700/50 p-5 rounded-2xl text-center shadow-inner">
+                <p class="text-xs text-slate-500 mb-1">רווח פנימי נקי (S):</p>
+                <div class="flex items-center justify-center gap-2">
+                    <span id="resSpaceVal" class="text-4xl sm:text-5xl font-mono font-black text-amber-400 drop-shadow-md">0</span>
+                    <span class="text-lg text-slate-600">mm</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+
+    <script>
+        function showView(id) {
+            document.querySelectorAll('.calculator-view').forEach(v => v.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            window.scrollTo(0,0);
+        }
+
+        // --- Miter Data & Logic ---
+        let isMiterEqualCut = true;
+        function setCutType(equal) {
+            isMiterEqualCut = equal;
+            const btnEqual = document.getElementById('cutTypeEqual');
+            const btnUnequal = document.getElementById('cutTypeUnequal');
+            const widthBContainer = document.getElementById('widthBContainer');
+            const widthALabel = document.getElementById('widthALabel');
+            if (equal) {
+                btnEqual.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all btn-amber shadow-md";
+                btnUnequal.className = "py-2.5 px-2 sm:px-4 rounded-
