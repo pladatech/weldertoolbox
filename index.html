@@ -9,18 +9,16 @@
     <title>ארגז כלים הנדסי</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    
     <link rel="manifest" href="./manifest.json">
     <link rel="apple-touch-icon" href="./icon.png">
     
     <style>
         :root {
-            --bg-color: #020617; /* Slate 950 */
-            --glass-bg: rgba(15, 23, 42, 0.7); /* Slate 900 transparent */
-            --glass-border: rgba(51, 65, 85, 0.5); /* Slate 700 transparent */
-            --accent: #f59e0b; /* Amber 500 */
+            --bg-color: #020617;
+            --glass-bg: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(51, 65, 85, 0.5);
+            --accent: #f59e0b;
         }
 
         body {
@@ -32,7 +30,6 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* רקע דינמי עם תאורה עדינה */
         .app-bg {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -51,7 +48,6 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        /* שדות הזנה מותאמים למובייל (16px מינימום מונע זום בiOS) */
         .input-field, select {
             background-color: rgba(2, 6, 23, 0.6);
             border: 1px solid #334155;
@@ -67,7 +63,6 @@
             background-color: rgba(2, 6, 23, 0.9);
         }
 
-        /* כפתורים עם משוב למגע */
         .btn-amber {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: #020617;
@@ -86,7 +81,6 @@
         .btn-slate-outline:hover { background: rgba(30, 41, 59, 0.8); border-color: #475569; color: #fff; }
         .btn-slate-outline:active { transform: scale(0.97); }
 
-        /* סגנון CAD מתקדם ויחסי (Responsive SVG) */
         .tech-illustration {
             border: 1px solid #1e293b;
             background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
@@ -94,7 +88,6 @@
             overflow: hidden;
             position: relative;
             box-shadow: inset 0 0 20px rgba(0,0,0,1);
-            /* aspect-ratio שומר על פרופורציות במובייל בלי לקבוע גובה קשיח */
         }
 
         .tech-grid-bg {
@@ -114,7 +107,6 @@
         .cad-fill-shade { fill: rgba(30, 41, 59, 0.8); }
         .cad-weld-fill { fill: #f59e0b; opacity: 0.25; stroke: #f59e0b; stroke-width: 0.5; }
 
-        /* מחשבון פשוט */
         .simple-calc-display { background: #020617; border: 1px solid #1e293b; box-shadow: inset 0 4px 10px rgba(0,0,0,0.5); }
         .simple-calc-btn { background: #1e293b; border: 1px solid #334155; box-shadow: 0 4px 0 #0f172a; transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1); }
         .simple-calc-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0f172a; }
@@ -125,7 +117,6 @@
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
 
-        /* אנימציית מעבר בין מסכים */
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -222,13 +213,10 @@
                 <span>←</span> חזרה
             </button>
             <h2 class="text-xl font-bold text-white mb-4">מחשבון דיאגונל</h2>
-            
             <div class="tech-illustration p-4 mb-6 flex items-center justify-center aspect-video w-full">
                 <div class="tech-grid-bg absolute inset-0"></div>
-                <svg id="diagonalSvg" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" class="w-full h-full z-10 drop-shadow-md">
-                </svg>
+                <svg id="diagonalSvg" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" class="w-full h-full z-10 drop-shadow-md"></svg>
             </div>
-
             <form id="diagonalForm" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -255,13 +243,10 @@
                 <span>←</span> חזרה
             </button>
             <h2 class="text-xl font-bold text-white mb-4">תכנון חיתוך (טריגונומטריה)</h2>
-            
             <div class="tech-illustration p-4 mb-6 flex items-center justify-center aspect-video w-full">
                 <div class="tech-grid-bg absolute inset-0"></div>
-                <svg id="rectDrawSvg" viewBox="0 0 200 150" class="w-full h-full z-10 drop-shadow-md">
-                </svg>
+                <svg id="rectDrawSvg" viewBox="0 0 200 150" class="w-full h-full z-10 drop-shadow-md"></svg>
             </div>
-
             <form id="rectDrawForm" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -307,12 +292,10 @@
                 <span>←</span> חזרה
             </button>
             <h2 class="text-xl font-bold text-white mb-6">משקל חומרים</h2>
-            
             <div class="tech-illustration p-4 mb-6 flex items-center justify-center min-h-[160px] sm:min-h-[200px] w-full">
                 <div class="tech-grid-bg absolute inset-0"></div>
                 <svg id="weightSvg" class="w-full h-full z-10 drop-shadow-md"></svg>
             </div>
-
             <form id="weightForm" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -331,7 +314,6 @@
                         </select>
                     </div>
                 </div>
-
                 <div id="weightPlateInputs" class="grid grid-cols-3 gap-3">
                     <div>
                         <label class="block text-xs text-slate-500 mb-1">אורך (mm)</label>
@@ -346,7 +328,6 @@
                         <input type="number" id="wD" class="w-full p-3.5 input-field rounded-xl font-mono text-center">
                     </div>
                 </div>
-
                 <div id="weightBeamInputs" class="grid grid-cols-3 gap-3 hidden">
                     <div>
                         <label class="block text-xs text-slate-500 mb-1">פרופיל</label>
@@ -381,7 +362,6 @@
                 <span>←</span> חזרה
             </button>
             <h2 class="text-xl font-bold text-white mb-6">מחשבון כמות חומר רתך</h2>
-            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                 <div class="space-y-6">
                     <div class="bg-slate-900/80 border border-slate-700/50 p-4 sm:p-5 rounded-2xl shadow-inner">
@@ -409,7 +389,7 @@
                                 <select id="weldFiller" class="w-full p-2.5 rounded-lg input-field text-sm"></select>
                             </div>
                             <div>
-                                <label class="block text-[11px] text-slate-400 mb-1">עובי חחוט/אלקט'</label>
+                                <label class="block text-[11px] text-slate-400 mb-1">עובי חוט/אלקט'</label>
                                 <select id="weldDia" class="w-full p-2.5 rounded-lg input-field text-sm font-mono"></select>
                             </div>
                             <div class="col-span-2">
@@ -551,7 +531,6 @@
                 <span>←</span> חזרה
             </button>
             <h2 class="text-xl font-bold text-white mb-4">תכנון מדרגות (תקן)</h2>
-            
             <div class="tech-illustration p-4 mb-6 flex items-center justify-center aspect-video w-full">
                 <div class="tech-grid-bg absolute inset-0"></div>
                 <svg viewBox="0 0 100 60" class="w-full h-full z-10 drop-shadow-md">
@@ -562,7 +541,6 @@
                     <text x="48" y="27" class="svg-label cad-text-obj">Nose</text>
                 </svg>
             </div>
-
             <form id="stairForm" class="space-y-4">
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">גובה המפלס (cm)</label>
@@ -580,7 +558,6 @@
                 </div>
                 <button type="submit" class="w-full btn-amber p-4 rounded-xl mt-4">חשב מהלך</button>
             </form>
-
             <div id="stairResultContainer" class="hidden mt-6 bg-slate-900/80 border border-slate-700/50 p-5 rounded-2xl space-y-3 font-mono text-sm shadow-inner">
                 <div class="flex justify-between border-b border-slate-800/80 pb-2">
                     <span class="text-slate-500">שלבים (N):</span>
@@ -602,7 +579,6 @@
                 <span>←</span> חזרה
             </button>
             <h2 class="text-xl font-bold text-white mb-4">חלוקת רווחים</h2>
-            
             <div class="tech-illustration p-4 mb-6 flex items-center justify-center aspect-video w-full">
                 <div class="tech-grid-bg absolute inset-0"></div>
                 <svg id="spacingSvg" viewBox="0 0 100 45" class="w-full h-full z-10 drop-shadow-md">
@@ -610,7 +586,6 @@
                     <text x="50" y="25" class="svg-label cad-text-dim" text-anchor="middle">Ready for Input</text>
                 </svg>
             </div>
-
             <form id="spacingForm" class="space-y-4">
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">רוחב הפתח (mm)</label>
@@ -633,7 +608,6 @@
                     </select>
                 </div>
             </form>
-
             <div id="spacingResultContainer" class="hidden mt-6 bg-slate-900/80 border border-slate-700/50 p-5 rounded-2xl text-center shadow-inner">
                 <p class="text-xs text-slate-500 mb-1">רווח פנימי נקי (S):</p>
                 <div class="flex items-center justify-center gap-2">
@@ -657,23 +631,688 @@
                     });
             });
         }
-    </script>
 
-    <script>
         function showView(id) {
             document.querySelectorAll('.calculator-view').forEach(v => v.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
             window.scrollTo(0,0);
         }
 
-        // --- Miter Data & Logic ---
-        let isMiterEqualCut = true;
-        function setCutType(equal) {
-            isMiterEqualCut = equal;
-            const btnEqual = document.getElementById('cutTypeEqual');
-            const btnUnequal = document.getElementById('cutTypeUnequal');
-            const widthBContainer = document.getElementById('widthBContainer');
-            const widthALabel = document.getElementById('widthALabel');
-            if (equal) {
-                btnEqual.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all btn-amber shadow-md";
-                btnUnequal.className = "py-2.5 px-2 sm:px-4 rounded-
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Safe Calculator Function ---
+            function safeCalc(n1, operator, n2) {
+                const a = parseFloat(n1);
+                const b = parseFloat(n2);
+                if(isNaN(a) || isNaN(b)) return 'Error';
+                switch(operator) {
+                    case '+': return a + b;
+                    case '-': return a - b;
+                    case '*': return a * b;
+                    case '/': return b === 0 ? 'Error' : a / b;
+                    default: return 0;
+                }
+            }
+
+            // --- Simple Calc Logic ---
+            const display = document.getElementById('calcDisplay');
+            const history = document.getElementById('calcHistory');
+            let cur = '0', prev = '', op = null;
+            let historyLogs = [];
+            let shouldReset = false;
+
+            function updateSimpleCalc() {
+                let expr = '';
+                if (prev) {
+                    expr += prev + ' ';
+                    if (op) expr += op + ' ';
+                    if (cur !== '0' || shouldReset) expr += cur;
+                } else {
+                    expr = cur;
+                }
+                display.textContent = expr || '0';
+            }
+
+            document.getElementById('calcButtons').addEventListener('click', (e) => {
+                const b = e.target.closest('button');
+                if (!b) return;
+                const { action, value } = b.dataset;
+                
+                if (action === 'number') {
+                    if (shouldReset) {
+                        cur = value;
+                        shouldReset = false;
+                    } else {
+                        cur = (cur === '0') ? value : cur + value;
+                    }
+                }
+                else if (action === 'clear') { 
+                    cur = '0'; prev = ''; op = null; 
+                    historyLogs = []; 
+                    shouldReset = false;
+                }
+                else if (action === 'delete') {
+                    if (!shouldReset) {
+                        cur = cur.length > 1 ? cur.slice(0, -1) : '0';
+                    }
+                }
+                else if (action === 'operator') { 
+                    if (prev && op && cur !== '0' && !shouldReset) {
+                        let res = safeCalc(prev, op, cur);
+                        if(res !== 'Error') {
+                            historyLogs.push(`${prev} ${op} ${cur} = ${res}`);
+                            prev = res.toString();
+                        } else {
+                            prev = cur;
+                        }
+                    } else {
+                        prev = cur; 
+                    }
+                    op = value; 
+                    cur = '0'; 
+                    shouldReset = false;
+                }
+                else if (action === 'percent') { 
+                    cur = (parseFloat(cur) / 100).toString(); 
+                    shouldReset = false;
+                }
+                else if (action === 'pyth_exec') {
+                    if (prev && cur && cur !== '0') {
+                        try {
+                            let res = Math.sqrt(Math.pow(parseFloat(prev), 2) + Math.pow(parseFloat(cur), 2));
+                            let finalRes = Number.isInteger(res) ? res.toString() : res.toFixed(3);
+                            historyLogs.push(`√(${prev}² + ${cur}²) = ${finalRes}`);
+                            cur = finalRes;
+                            prev = '';
+                            op = null;
+                            shouldReset = true;
+                        } catch(e) { cur = 'Error'; }
+                    }
+                }
+                else if (action === 'equals' && op) {
+                    let res = safeCalc(prev, op, cur);
+                    historyLogs.push(`${prev} ${op} ${cur} = ${res}`);
+                    cur = res.toString();
+                    prev = '';
+                    op = null;
+                    shouldReset = true;
+                }
+                
+                history.innerHTML = historyLogs.join('<br>');
+                history.scrollTop = history.scrollHeight;
+                updateSimpleCalc();
+            });
+
+            // --- Miter Data & Logic ---
+            window.isMiterEqualCut = true;
+            window.setCutType = function(equal) {
+                window.isMiterEqualCut = equal;
+                const btnEqual = document.getElementById('cutTypeEqual');
+                const btnUnequal = document.getElementById('cutTypeUnequal');
+                const widthBContainer = document.getElementById('widthBContainer');
+                const widthALabel = document.getElementById('widthALabel');
+                if (equal) {
+                    btnEqual.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all btn-amber shadow-md";
+                    btnUnequal.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all text-slate-400 hover:text-white";
+                    widthBContainer.classList.add('hidden');
+                    widthALabel.innerText = "רוחב פרופיל";
+                } else {
+                    btnUnequal.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all btn-amber shadow-md";
+                    btnEqual.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all text-slate-400 hover:text-white";
+                    widthBContainer.classList.remove('hidden');
+                    widthALabel.innerText = "פרופיל א'";
+                }
+                window.calculateMiter();
+            };
+
+            window.calculateMiter = function() {
+                let theta = parseFloat(document.getElementById('cornerAngle').value);
+                if (isNaN(theta)) theta = 90;
+                let w1 = parseFloat(document.getElementById('widthA').value) || 50;
+                let w2 = w1;
+                if (!window.isMiterEqualCut) {
+                    w2 = parseFloat(document.getElementById('widthB').value) || 50;
+                }
+                const phi = 180 - theta;
+                const phiRad = (phi * Math.PI) / 180;
+                let s1 = 0, s2 = 0;
+                if (window.isMiterEqualCut) { s1 = phi / 2; s2 = phi / 2; } 
+                else {
+                    const num = w2 - w1 * Math.cos(phiRad);
+                    const den = w1 * Math.sin(phiRad);
+                    const s1Rad = Math.atan2(num, den);
+                    s1 = (s1Rad * 180) / Math.PI;
+                    s2 = phi - s1;
+                }
+                document.getElementById('angleAResult').innerText = s1.toFixed(1) + "°";
+                document.getElementById('angleBResult').innerText = s2.toFixed(1) + "°";
+                document.getElementById('internalAResult').innerText = (90 - s1).toFixed(1) + "°";
+                document.getElementById('internalBResult').innerText = (90 - s2).toFixed(1) + "°";
+                drawMiterDiagram(theta, w1, w2, s1, s2);
+            };
+
+            function drawMiterDiagram(theta, w1, w2, s1, s2) {
+                const M = 2.5; 
+                const pin = { x: 250 * M, y: 250 * M };
+                const maxW = Math.max(w1, w2);
+                const scale = (100 * M) / maxW;
+                const dw1 = Math.max(20 * M, w1 * scale);
+                const dw2 = Math.max(20 * M, w2 * scale);
+                const phiRad = ((180 - theta) * Math.PI) / 180;
+                const s1Rad = (s1 * Math.PI) / 180;
+                const s2Rad = (s2 * Math.PI) / 180;
+                const outX = pin.x + dw1 * Math.tan(s1Rad);
+                const outY = pin.y - dw1;
+                const pout = { x: outX, y: outY };
+                const L = 180 * M; 
+                const d2 = { x: -Math.cos(phiRad), y: -Math.sin(phiRad) };
+                const n2 = { x: Math.sin(phiRad), y: -Math.cos(phiRad) };
+                const outerEndA = { x: pin.x + L, y: pin.y - dw1 };
+                const innerEndA = { x: pin.x + L, y: pin.y };
+                const polyAPoints = `${pin.x},${pin.y} ${pout.x},${pout.y} ${outerEndA.x},${outerEndA.y} ${innerEndA.x},${innerEndA.y}`;
+                const innerEndB = { x: pin.x + L * d2.x, y: pin.y + L * d2.y };
+                const outerEndB = { x: innerEndB.x + dw2 * n2.x, y: innerEndB.y + dw2 * n2.y };
+                const polyBPoints = `${pin.x},${pin.y} ${pout.x},${pout.y} ${outerEndB.x},${outerEndB.y} ${innerEndB.x},${innerEndB.y}`;
+                
+                const arcR = 40 * M;
+                const sweepAngle = 180 - theta;
+                const arcEnd = { x: pin.x + arcR * Math.cos((180 - sweepAngle) * Math.PI / 180), y: pin.y - arcR * Math.sin((180 - sweepAngle) * Math.PI / 180) };
+                const largeArcFlag = sweepAngle > 180 ? 1 : 0;
+                const midAngleRad = ((180 - (sweepAngle / 2)) * Math.PI) / 180;
+                const textR = arcR + 20 * M;
+                const textX = pin.x + textR * Math.cos(midAngleRad);
+                const textY = pin.y + textR * Math.sin(midAngleRad);
+                
+                const intA = (90 - s1).toFixed(1) + '°';
+                const intB = (90 - s2).toFixed(1) + '°';
+
+                const textAX = outerEndA.x + 15 * M;
+                const textBX = (outerEndB.x + innerEndB.x)/2 + d2.x * 15 * M;
+
+                const safeDistA = dw1 * Math.tan(s1Rad) + 35 * M;
+                const safeDistB = dw2 * Math.tan(s2Rad) + 35 * M;
+                
+                const intTextAX = pin.x + safeDistA;
+                const intTextAY = pin.y - dw1 / 2; 
+                const intTextBX = pin.x + d2.x * safeDistB + n2.x * dw2 / 2;
+                const intTextBY = pin.y + d2.y * safeDistB + n2.y * dw2 / 2;
+
+                const xs = [pin.x, pout.x, outerEndA.x, innerEndA.x, outerEndB.x, innerEndB.x, textX, textAX, textBX, intTextAX, intTextBX];
+                const ys = [pin.y, pout.y, outerEndA.y, innerEndA.y, outerEndB.y, innerEndB.y, textY, intTextAY, intTextBY];
+                const pad = 40 * M;
+                const vMinX = Math.min(...xs) - pad;
+                const vMinY = Math.min(...ys) - pad;
+                const vW = Math.max(...xs) - Math.min(...xs) + pad * 2;
+                const vH = Math.max(...ys) - Math.min(...ys) + pad * 2;
+                
+                document.getElementById('miterSvg').setAttribute('viewBox', `${vMinX} ${vMinY} ${vW} ${vH}`);
+
+                const svgHtml = `
+                    <polygon points="${polyAPoints}" class="cad-fill-shade" stroke="#ffffff" stroke-width="${1.5 * M}" vector-effect="non-scaling-stroke" />
+                    <polygon points="${polyBPoints}" class="cad-fill-shade" stroke="#ffffff" stroke-width="${1.5 * M}" vector-effect="non-scaling-stroke" />
+                    <line x1="${pin.x}" y1="${pin.y}" x2="${pout.x}" y2="${pout.y}" class="cad-line-center" stroke-width="${2 * M}" vector-effect="non-scaling-stroke" />
+                    
+                    <path d="M ${pin.x + arcR} ${pin.y} A ${arcR} ${arcR} 0 ${largeArcFlag} 0 ${arcEnd.x} ${arcEnd.y}" class="cad-line-dim" stroke-width="${1 * M}" vector-effect="non-scaling-stroke" />
+                    <text x="${textX}" y="${textY}" class="svg-label cad-text-dim" style="font-size:${14 * M}px;" text-anchor="middle" dominant-baseline="central">${theta}°</text>
+                    <circle cx="${pin.x}" cy="${pin.y}" r="${3 * M}" fill="#ffffff" />
+                    
+                    <line x1="${outerEndA.x + 10*M}" y1="${outerEndA.y}" x2="${innerEndA.x + 10*M}" y2="${innerEndA.y}" stroke="#3b82f6" stroke-width="${1 * M}" stroke-dasharray="${2*M},${2*M}" vector-effect="non-scaling-stroke"/>
+                    <text x="${textAX}" y="${(outerEndA.y + innerEndA.y)/2}" class="svg-label cad-text-dim" style="font-size:${12 * M}px;" dominant-baseline="central">${w1}</text>
+                    
+                    <line x1="${outerEndB.x + d2.x*10*M}" y1="${outerEndB.y + d2.y*10*M}" x2="${innerEndB.x + d2.x*10*M}" y2="${innerEndB.y + d2.y*10*M}" stroke="#3b82f6" stroke-width="${1 * M}" stroke-dasharray="${2*M},${2*M}" vector-effect="non-scaling-stroke"/>
+                    <text x="${textBX}" y="${(outerEndB.y + innerEndB.y)/2 + d2.y*15*M}" class="svg-label cad-text-dim" style="font-size:${12 * M}px;" text-anchor="middle" dominant-baseline="central">${w2}</text>
+                    
+                    <text x="${intTextAX}" y="${intTextAY}" class="svg-label" style="fill:#10b981; font-size:${11 * M}px;" dominant-baseline="central" text-anchor="middle">${intA}</text>
+                    <text x="${intTextBX}" y="${intTextBY}" class="svg-label" style="fill:#10b981; font-size:${11 * M}px;" dominant-baseline="central" text-anchor="middle">${intB}</text>
+                `;
+                document.getElementById('miterSvg').innerHTML = svgHtml;
+            }
+
+            // --- Weld Calculator ---
+            const WELD_FILLER_TYPES = {
+                smaw: [{ id: '6010', name: 'E6010 / E6011', eff: 0.55 }, { id: '7018', name: 'E7018', eff: 0.65 }, { id: '7024', name: 'E7024', eff: 0.70 }],
+                gmaw: [{ id: 'er70s', name: 'חוט מלא ER70S', eff: 0.95 }, { id: 'alum', name: 'חוט אלומיניום', eff: 0.90 }],
+                fcaw: [{ id: 'rutile', name: 'חוט ממולא רוטיל', eff: 0.85 }, { id: 'metal', name: 'חוט ממולא מתכת', eff: 0.90 }],
+                gtaw: [{ id: 'rod', name: 'מוט טיג', eff: 0.98 }]
+            };
+            const WELD_DIAS = {
+                smaw: [2.0, 2.5, 3.2, 4.0, 5.0],
+                gmaw: [0.6, 0.8, 1.0, 1.2, 1.6],
+                fcaw: [1.0, 1.2, 1.4, 1.6, 2.0],
+                gtaw: [1.6, 2.0, 2.4, 3.2, 4.0]
+            };
+
+            function updateWeldOptions() {
+                const proc = document.getElementById('weldProc').value;
+                const fillSel = document.getElementById('weldFiller');
+                const diaSel = document.getElementById('weldDia');
+                fillSel.innerHTML = '';
+                WELD_FILLER_TYPES[proc].forEach(f => fillSel.add(new Option(f.name, f.id)));
+                diaSel.innerHTML = '';
+                WELD_DIAS[proc].forEach(d => diaSel.add(new Option(d.toFixed(1), d)));
+                diaSel.selectedIndex = Math.floor(WELD_DIAS[proc].length / 2);
+                document.getElementById('weldPackWeight').value = (proc === 'smaw' || proc === 'gtaw') ? 5 : 15;
+                calculateWeld();
+            }
+
+            function toggleWeldJointParams() {
+                const joint = document.getElementById('weldJoint').value;
+                const vParams = document.getElementById('vGrooveParams');
+                const sizeLabel = document.getElementById('weldSizeLabel');
+                const throatContainer = document.getElementById('resWeldThroatContainer');
+                if (joint === 'fillet') {
+                    vParams.classList.add('hidden');
+                    sizeLabel.innerText = "מידת ניצב (mm)";
+                    throatContainer.classList.remove('hidden');
+                } else {
+                    vParams.classList.remove('hidden');
+                    sizeLabel.innerText = "עובי החומר (mm)";
+                    throatContainer.classList.add('hidden');
+                }
+                calculateWeld();
+            }
+
+            function calculateWeld() {
+                const matDensity = parseFloat(document.getElementById('weldMat').value) || 7.85;
+                const proc = document.getElementById('weldProc').value;
+                const fillerId = document.getElementById('weldFiller').value;
+                const jointType = document.getElementById('weldJoint').value;
+                const len = parseFloat(document.getElementById('weldLen').value) || 0;
+                const size = parseFloat(document.getElementById('weldSize').value) || 0;
+                const packWeight = parseFloat(document.getElementById('weldPackWeight').value) || 1;
+                const currentFiller = WELD_FILLER_TYPES[proc].find(f => f.id === fillerId) || WELD_FILLER_TYPES[proc][0];
+                const eff = currentFiller.eff;
+
+                let area = 0;
+                if (jointType === 'fillet') {
+                    area = (0.5 * size * size) * 1.1; 
+                    document.getElementById('resWeldThroat').innerText = (size * 0.7071).toFixed(1) + " mm";
+                    renderWeldSvg('fillet', size);
+                } else {
+                    const gap = parseFloat(document.getElementById('weldGap').value) || 0;
+                    const angle = parseFloat(document.getElementById('weldAngle').value) || 0;
+                    const rootArea = gap * size;
+                    const angleRad = (angle / 2) * (Math.PI / 180);
+                    const grooveArea = Math.pow(size, 2) * Math.tan(angleRad);
+                    area = (rootArea + grooveArea) * 1.1;
+                    renderWeldSvg('v_groove', size, gap, angle);
+                }
+
+                if (area === 0 || len === 0) {
+                    document.getElementById('resWeldReq').innerText = "0.00 kg";
+                    document.getElementById('resWeldEff').innerText = (eff * 100).toFixed(0) + "%";
+                    document.getElementById('resWeldPacks').innerText = "0";
+                    return;
+                }
+
+                const theoW = (area * len * matDensity) / 1000;
+                const reqW = theoW / eff;
+                const packs = Math.ceil(reqW / packWeight);
+                document.getElementById('resWeldReq').innerText = reqW.toFixed(2) + " kg";
+                document.getElementById('resWeldEff').innerText = (eff * 100).toFixed(0) + "%";
+                document.getElementById('resWeldPacks').innerText = packs;
+            }
+
+            function renderWeldSvg(type, size, gap, angle) {
+                const svgContainer = document.getElementById('weldSvgContainer');
+                if (type === 'fillet') {
+                    svgContainer.innerHTML = `
+                        <svg viewBox="0 0 100 80" class="w-full h-full max-h-[140px]">
+                            <path d="M 20 10 L 40 10 L 40 70 L 90 70 L 90 90 L 20 90 Z" class="cad-fill-shade" stroke="#ffffff" stroke-width="1.5" vector-effect="non-scaling-stroke" />
+                            <path d="M 40 30 Q 60 50 70 70 L 40 70 Z" class="cad-weld-fill" />
+                            <line x1="35" y1="30" x2="25" y2="30" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                            <line x1="35" y1="70" x2="25" y2="70" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                            <line x1="30" y1="30" x2="30" y2="70" stroke="#3b82f6" stroke-width="0.75" vector-effect="non-scaling-stroke" />
+                            <text x="15" y="52" class="svg-label cad-text-dim">a=${size}</text>
+                        </svg>
+                    `;
+                } else {
+                    svgContainer.innerHTML = `
+                        <svg viewBox="0 0 100 80" class="w-full h-full max-h-[140px]">
+                            <path d="M 5 20 L 40 20 L 48 70 L 5 70 Z" class="cad-fill-shade" stroke="#ffffff" stroke-width="1.5" vector-effect="non-scaling-stroke" />
+                            <path d="M 95 20 L 60 20 L 52 70 L 95 70 Z" class="cad-fill-shade" stroke="#ffffff" stroke-width="1.5" vector-effect="non-scaling-stroke" />
+                            <path d="M 40 20 Q 50 15 60 20 L 52 70 L 48 70 Z" class="cad-weld-fill" />
+                            <line x1="48" y1="75" x2="48" y2="85" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                            <line x1="52" y1="75" x2="52" y2="85" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                            <line x1="48" y1="80" x2="52" y2="80" stroke="#3b82f6" stroke-width="0.75" vector-effect="non-scaling-stroke" />
+                            <text x="50" y="90" class="svg-label cad-text-dim" text-anchor="middle">g=${gap}</text>
+                            <path d="M 45 15 A 20 20 0 0 1 55 15" fill="none" stroke="#3b82f6" stroke-width="0.75" vector-effect="non-scaling-stroke" />
+                            <text x="50" y="10" class="svg-label cad-text-dim" text-anchor="middle">${angle}°</text>
+                        </svg>
+                    `;
+                }
+            }
+
+            document.getElementById('weldProc').addEventListener('change', updateWeldOptions);
+            document.getElementById('weldJoint').addEventListener('change', toggleWeldJointParams);
+            ['weldMat', 'weldFiller', 'weldDia', 'weldLen', 'weldSize', 'weldGap', 'weldAngle', 'weldPackWeight'].forEach(id => {
+                document.getElementById(id).addEventListener('input', calculateWeld);
+                document.getElementById(id).addEventListener('change', calculateWeld);
+            });
+
+            // --- Diagonal Calc ---
+            function drawDiagonalDiagramDefault() {
+                const svg = document.getElementById('diagonalSvg');
+                if (!svg) return;
+                svg.innerHTML = `
+                    <rect x="50" y="40" width="100" height="70" class="cad-line-main" vector-effect="non-scaling-stroke"/>
+                    <path d="M 50 110 L 150 40" class="cad-line-dim" vector-effect="non-scaling-stroke"/>
+                    <line x1="50" y1="35" x2="50" y2="25" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke" />
+                    <line x1="150" y1="35" x2="150" y2="25" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke" />
+                    <line x1="45" y1="40" x2="35" y2="40" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke" />
+                    <line x1="45" y1="110" x2="35" y2="110" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke" />
+                    <text x="100" y="30" class="svg-label cad-text-dim" style="font-size: 8px;" text-anchor="middle">רוחב (W)</text>
+                    <text x="40" y="75" class="svg-label cad-text-dim" style="font-size: 8px;" transform="rotate(-90, 40, 75)" text-anchor="middle">גובה (H)</text>
+                    <text x="100" y="72" class="svg-label cad-text-obj" style="font-size: 8px;" transform="rotate(-34.99, 100, 75) translate(0, -5)" text-anchor="middle">אלכסון (C)</text>
+                `;
+            }
+
+            function drawDiagonalDiagram(w, h, diag) {
+                const svg = document.getElementById('diagonalSvg');
+                if (!svg) return;
+                const cx = 100, cy = 75;
+                const maxW = 120, maxH = 90;
+                const scale = Math.min(maxW / w, maxH / h);
+                const rectW = w * scale;
+                const rectH = h * scale;
+                const x = cx - rectW / 2;
+                const y = cy - rectH / 2;
+                const diagAngleRad = Math.atan2(rectH, rectW);
+                const diagAngleDeg = (diagAngleRad * 180 / Math.PI) * -1;
+                svg.innerHTML = `
+                    <rect x="${x}" y="${y}" width="${rectW}" height="${rectH}" class="cad-line-main" vector-effect="non-scaling-stroke"/>
+                    <path d="M ${x} ${y + rectH} L ${x + rectW} ${y}" class="cad-line-dim" vector-effect="non-scaling-stroke"/>
+                    <line x1="${x}" y1="${y-3}" x2="${x}" y2="${y-10}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
+                    <line x1="${x+rectW}" y1="${y-3}" x2="${x+rectW}" y2="${y-10}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
+                    <line x1="${x}" y1="${y-6}" x2="${x+rectW}" y2="${y-6}" stroke="#3b82f6" stroke-width="0.75" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>
+                    <text x="${cx}" y="${y-10}" class="svg-label cad-text-dim" style="font-size: 8px;" text-anchor="middle">${w}</text>
+                    <line x1="${x-3}" y1="${y}" x2="${x-10}" y2="${y}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
+                    <line x1="${x-3}" y1="${y+rectH}" x2="${x-10}" y2="${y+rectH}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
+                    <line x1="${x-6}" y1="${y}" x2="${x-6}" y2="${y+rectH}" stroke="#3b82f6" stroke-width="0.75" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>
+                    <text x="${x-10}" y="${cy}" class="svg-label cad-text-dim" style="font-size: 8px;" transform="rotate(-90, ${x-10}, ${cy})" text-anchor="middle">${h}</text>
+                    <text x="${cx}" y="${cy}" class="svg-label cad-text-obj" style="font-size: 9px; font-weight: bold;" transform="rotate(${diagAngleDeg}, ${cx}, ${cy}) translate(0, -4)" text-anchor="middle">${diag.toFixed(1)}</text>
+                `;
+            }
+
+            function calculateDiagonal() {
+                const a = parseFloat(document.getElementById('diagWidth').value);
+                const b = parseFloat(document.getElementById('diagHeight').value);
+                const resContainer = document.getElementById('diagonalResultContainer');
+                if (!isNaN(a) && !isNaN(b) && a > 0 && b > 0) {
+                    const diag = Math.sqrt(a*a + b*b);
+                    document.getElementById('diagonalResult').textContent = diag.toFixed(2);
+                    resContainer.classList.remove('hidden');
+                    drawDiagonalDiagram(a, b, diag);
+                } else {
+                    resContainer.classList.add('hidden');
+                    drawDiagonalDiagramDefault();
+                }
+            }
+            
+            document.getElementById('diagWidth').addEventListener('input', calculateDiagonal);
+            document.getElementById('diagHeight').addEventListener('input', calculateDiagonal);
+            document.getElementById('diagonalForm').addEventListener('submit', (e) => { e.preventDefault(); calculateDiagonal(); });
+
+            // --- Rect Draw ---
+            function drawRectDrawDiagramDefault() {
+                const svg = document.getElementById('rectDrawSvg');
+                if (!svg) return;
+                svg.innerHTML = `
+                    <rect x="50" y="40" width="100" height="70" class="cad-line-main" vector-effect="non-scaling-stroke"/>
+                    <path d="M 50 110 L 150 40" class="cad-line-dim" vector-effect="non-scaling-stroke"/>
+                    <path d="M 75 110 A 25 25 0 0 0 70.5 95.5" stroke="#f59e0b" stroke-width="0.75" fill="none" vector-effect="non-scaling-stroke"/>
+                    <line x1="50" y1="35" x2="50" y2="25" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
+                    <line x1="150" y1="35" x2="150" y2="25" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
+                    <line x1="45" y1="40" x2="35" y2="40" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
+                    <line x1="45" y1="110" x2="35" y2="110" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
+                    <text x="100" y="30" class="svg-label cad-text-dim" style="font-size: 8px;" text-anchor="middle">W</text>
+                    <text x="40" y="75" class="svg-label cad-text-dim" style="font-size: 8px;" transform="rotate(-90, 40, 75)" text-anchor="middle">H</text>
+                    <text x="78" y="105" class="svg-label cad-text-dim" style="font-size: 8px;">A°</text>
+                `;
+            }
+
+            function drawRectDrawDiagram(w, h, c, angleDeg) {
+                const svg = document.getElementById('rectDrawSvg');
+                if (!svg) return;
+                const cx = 100, cy = 75;
+                const maxW = 120, maxH = 90;
+                const scale = Math.min(maxW / w, maxH / h);
+                const rectW = w * scale;
+                const rectH = h * scale;
+                const x = cx - rectW / 2;
+                const y = cy - rectH / 2;
+                const angleRad = angleDeg * Math.PI / 180;
+                const arcR = Math.min(25, rectW * 0.4, rectH * 0.8);
+                const arcStartX = x + arcR;
+                const arcStartY = y + rectH;
+                const arcEndX = x + arcR * Math.cos(angleRad);
+                const arcEndY = y + rectH - arcR * Math.sin(angleRad);
+                const textR = arcR + 8;
+                const textAngleRad = angleRad / 2;
+                const textX = x + textR * Math.cos(textAngleRad);
+                const textY = y + rectH - textR * Math.sin(textAngleRad);
+                svg.innerHTML = `
+                    <rect x="${x}" y="${y}" width="${rectW}" height="${rectH}" class="cad-line-main" vector-effect="non-scaling-stroke"/>
+                    <path d="M ${x} ${y + rectH} L ${x + rectW} ${y}" class="cad-line-dim" vector-effect="non-scaling-stroke"/>
+                    <path d="M ${arcStartX} ${arcStartY} A ${arcR} ${arcR} 0 0 0 ${arcEndX} ${arcEndY}" stroke="#f59e0b" stroke-width="0.75" fill="none" vector-effect="non-scaling-stroke"/>
+                    <text x="${textX}" y="${textY}" class="svg-label cad-text-dim" style="font-size: 6px;" text-anchor="middle" dominant-baseline="central">${angleDeg.toFixed(1)}°</text>
+                    <line x1="${x}" y1="${y-3}" x2="${x}" y2="${y-10}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
+                    <line x1="${x+rectW}" y1="${y-3}" x2="${x+rectW}" y2="${y-10}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
+                    <line x1="${x}" y1="${y-6}" x2="${x+rectW}" y2="${y-6}" stroke="#3b82f6" stroke-width="0.75" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>
+                    <text x="${cx}" y="${y-10}" class="svg-label cad-text-dim" style="font-size: 8px;" text-anchor="middle">${w.toFixed(1)}</text>
+                    <line x1="${x-3}" y1="${y}" x2="${x-10}" y2="${y}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
+                    <line x1="${x-3}" y1="${y+rectH}" x2="${x-10}" y2="${y+rectH}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
+                    <line x1="${x-6}" y1="${y}" x2="${x-6}" y2="${y+rectH}" stroke="#3b82f6" stroke-width="0.75" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>
+                    <text x="${x-10}" y="${cy}" class="svg-label cad-text-dim" style="font-size: 8px;" transform="rotate(-90, ${x-10}, ${cy})" text-anchor="middle">${h.toFixed(1)}</text>
+                `;
+            }
+
+            function calculateRectDraw() {
+                const side = document.getElementById('rectDrawInputSide').value;
+                const len = parseFloat(document.getElementById('rectDrawSideLength').value);
+                const angleDeg = parseFloat(document.getElementById('rectDrawAngle').value);
+                const resContainer = document.getElementById('rectDrawResultContainer');
+                if (!isNaN(len) && !isNaN(angleDeg) && len > 0 && angleDeg > 0 && angleDeg < 90) {
+                    const angleRad = angleDeg * (Math.PI / 180);
+                    let w, h, c;
+                    if (side === 'a') { w = len; h = w * Math.tan(angleRad); c = w / Math.cos(angleRad); } 
+                    else { h = len; w = h / Math.tan(angleRad); c = h / Math.sin(angleRad); }
+                    document.getElementById('resA').textContent = w.toFixed(1);
+                    document.getElementById('resB').textContent = h.toFixed(1);
+                    document.getElementById('resC').textContent = c.toFixed(1);
+                    resContainer.classList.remove('hidden');
+                    drawRectDrawDiagram(w, h, c, angleDeg);
+                } else {
+                    resContainer.classList.add('hidden');
+                    drawRectDrawDiagramDefault();
+                }
+            }
+
+            document.getElementById('rectDrawInputSide').addEventListener('change', calculateRectDraw);
+            document.getElementById('rectDrawSideLength').addEventListener('input', calculateRectDraw);
+            document.getElementById('rectDrawAngle').addEventListener('input', calculateRectDraw);
+            document.getElementById('rectDrawForm').addEventListener('submit', (e) => { e.preventDefault(); calculateRectDraw(); });
+
+            // --- Stairs ---
+            document.getElementById('stairForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const h = parseFloat(document.getElementById('stairH').value);
+                let n = parseInt(document.getElementById('stairN').value);
+                if (!n) n = Math.round(h / 17);
+                const r = h / n;
+                const t = 63 - (2 * r);
+                document.getElementById('resSN').textContent = n;
+                document.getElementById('resSR').textContent = r.toFixed(2) + ' cm';
+                document.getElementById('resST').textContent = t.toFixed(2) + ' cm';
+                document.getElementById('stairResultContainer').classList.remove('hidden');
+            });
+
+            // --- Spacing ---
+            function drawSpacingDiagram() {
+                const W = parseFloat(document.getElementById('spaceTotalW').value);
+                const M = parseFloat(document.getElementById('spaceMatW').value);
+                const N = parseInt(document.getElementById('spaceNumPickets').value);
+                const type = document.getElementById('spaceType').value;
+                const svg = document.getElementById('spacingSvg');
+                if(isNaN(W) || isNaN(M) || isNaN(N) || N <= 0) return;
+                let gaps, S;
+                if (type === 'withEdges') { gaps = N + 1; S = (W - (N * M)) / gaps; } 
+                else { gaps = N - 1; S = (W - (N * M)) / gaps; }
+                if (S < 0) return;
+                const scale = 90 / W; const pW = M * scale; const gW = S * scale;
+                let html = `<rect x="5" y="15" width="90" height="15" class="cad-line-dim" vector-effect="non-scaling-stroke"/><line x1="5" y1="10" x2="95" y2="10" class="cad-line-center" vector-effect="non-scaling-stroke"/>`;
+                let cx = 5;
+                if (type === 'withEdges') {
+                    for (let i=0; i<N; i++) { cx+=gW; html+=`<rect x="${cx}" y="15" width="${pW}" height="15" class="cad-line-main cad-fill-shade" vector-effect="non-scaling-stroke"/>`; cx+=pW; }
+                } else {
+                    for (let i=0; i<N; i++) { html+=`<rect x="${cx}" y="15" width="${pW}" height="15" class="cad-line-main cad-fill-shade" vector-effect="non-scaling-stroke"/>`; cx+=pW; if(i<N-1)cx+=gW; }
+                }
+                html += `<text x="50" y="8" class="svg-label cad-text-dim" text-anchor="middle">S = ${S.toFixed(1)}</text>`;
+                svg.innerHTML = html;
+            }
+
+            document.getElementById('spaceTotalW').addEventListener('input', drawSpacingDiagram);
+            document.getElementById('spaceMatW').addEventListener('input', drawSpacingDiagram);
+            document.getElementById('spaceNumPickets').addEventListener('input', drawSpacingDiagram);
+            document.getElementById('spaceType').addEventListener('change', drawSpacingDiagram);
+
+            document.getElementById('spacingForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const W = parseFloat(document.getElementById('spaceTotalW').value);
+                const M = parseFloat(document.getElementById('spaceMatW').value);
+                const N = parseInt(document.getElementById('spaceNumPickets').value);
+                const type = document.getElementById('spaceType').value;
+                let gaps, S;
+                if (type === 'withEdges') { gaps = N + 1; S = (W - (N * M)) / gaps; } 
+                else { gaps = N - 1; S = (W - (N * M)) / gaps; }
+                const resVal = document.getElementById('resSpaceVal');
+                if (S < 0) { resVal.textContent = "Error"; resVal.classList.add('text-red-500'); } 
+                else { resVal.textContent = S.toFixed(2); resVal.classList.remove('text-red-500'); }
+                document.getElementById('spacingResultContainer').classList.remove('hidden');
+                drawSpacingDiagram();
+            });
+
+            // --- Weight ---
+            const BEAM_DATA = {
+                HEB: { '100': 20.4, '120': 26.7, '140': 33.7, '160': 42.6, '200': 61.3, '240': 83.2, '300': 117.0 },
+                IPE: { '100': 8.1, '120': 10.4, '140': 12.9, '160': 15.8, '200': 22.4, '240': 30.7, '300': 42.2 },
+                IPN: { '100': 8.3, '120': 11.1, '140': 14.3, '160': 17.9, '200': 26.2, '240': 36.2, '300': 54.2 },
+                UNP: { '100': 10.6, '120': 13.4, '140': 16.0, '160': 18.8, '200': 25.3, '240': 33.2, '300': 46.2 }
+            };
+
+            function updateBeamSizes() {
+                const type = document.getElementById('beamType').value;
+                const sizeSel = document.getElementById('beamSize');
+                sizeSel.innerHTML = '';
+                Object.keys(BEAM_DATA[type]).forEach(size => { sizeSel.add(new Option(size, size)); });
+                calculateWeight();
+            }
+
+            function toggleWeightMode() {
+                const mode = document.getElementById('weightMode').value;
+                if(mode === 'plate') {
+                    document.getElementById('weightPlateInputs').classList.remove('hidden');
+                    document.getElementById('weightBeamInputs').classList.add('hidden');
+                    document.getElementById('weightMatContainer').classList.remove('hidden');
+                } else {
+                    document.getElementById('weightPlateInputs').classList.add('hidden');
+                    document.getElementById('weightBeamInputs').classList.remove('hidden');
+                    document.getElementById('weightMatContainer').classList.add('hidden');
+                }
+                calculateWeight();
+            }
+
+            function drawWeightSvg(mode, w, d, l, beamType, size) {
+                const svg = document.getElementById('weightSvg');
+                if(!svg) return;
+                svg.setAttribute('viewBox', '0 0 200 150');
+                let html = '';
+                if(mode === 'plate') {
+                    html = `
+                        <path d="M 40,105 L 100,105 L 150,75 L 90,75 Z" fill="#334155" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+                        <path d="M 100,105 L 150,75 L 150,95 L 100,125 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+                        <path d="M 40,105 L 100,105 L 100,125 L 40,125 Z" fill="#1e293b" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+                        <line x1="40" y1="130" x2="100" y2="130" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                        <text x="70" y="140" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">W: ${w || 0}</text>
+                        <line x1="35" y1="105" x2="35" y2="125" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                        <text x="25" y="117" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">t: ${d || 0}</text>
+                        <line x1="105" y1="130" x2="155" y2="100" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                        <text x="135" y="120" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">L: ${l || 0}</text>
+                    `;
+                } else {
+                    if(beamType === 'UNP') {
+                        html = `
+                            <path d="M 50,60 L 110,25 L 150,25 L 90,60 Z" fill="#334155" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <path d="M 58,68 L 118,33 L 150,33 L 90,68 Z" fill="#020617" stroke="#ffffff" stroke-width="1" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <path d="M 58,68 L 118,33 L 118,77 L 58,112 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <path d="M 58,112 L 118,77 L 150,77 L 90,112 Z" fill="#1e293b" stroke="#ffffff" stroke-width="1" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <path d="M 90,60 L 150,25 L 150,33 L 90,68 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <path d="M 90,112 L 150,77 L 150,85 L 90,120 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <path d="M 50,120 h40 v-8 h-32 v-44 h32 v-8 h-40 Z" fill="#1e293b" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <line x1="95" y1="125" x2="155" y2="90" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                            <text x="135" y="115" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">L: ${l || 0}</text>
+                            <line x1="45" y1="120" x2="45" y2="60" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                            <text x="35" y="90" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">${beamType} ${size}</text>
+                        `;
+                    } else {
+                        html = `
+                            <path d="M 50,60 L 110,25 L 150,25 L 90,60 Z" fill="#334155" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <path d="M 73,68 L 133,33 L 150,33 L 90,68 Z" fill="#020617" stroke="#ffffff" stroke-width="1" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <path d="M 73,68 L 133,33 L 133,77 L 73,112 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <path d="M 73,112 L 133,77 L 150,77 L 90,112 Z" fill="#1e293b" stroke="#ffffff" stroke-width="1" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <path d="M 90,60 L 150,25 L 150,33 L 90,68 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <path d="M 90,112 L 150,77 L 150,85 L 90,120 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <path d="M 50,120 h40 v-8 h-17 v-44 h17 v-8 h-40 v8 h17 v44 h-17 Z" fill="#1e293b" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <line x1="95" y1="125" x2="155" y2="90" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                            <text x="135" y="115" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">L: ${l || 0}</text>
+                            <line x1="45" y1="120" x2="45" y2="60" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                            <text x="35" y="90" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">${beamType} ${size}</text>
+                        `;
+                    }
+                }
+                svg.innerHTML = html;
+            }
+
+            function calculateWeight() {
+                const mode = document.getElementById('weightMode').value;
+                let weight = 0;
+                if(mode === 'plate') {
+                    const l = parseFloat(document.getElementById('wL').value) || 0;
+                    const w = parseFloat(document.getElementById('wW').value) || 0;
+                    const d = parseFloat(document.getElementById('wD').value) || 0;
+                    const density = parseFloat(document.getElementById('mat').value) || 7.85;
+                    weight = (l * w * d * density) / 1000000;
+                    drawWeightSvg('plate', w, d, l, null, null);
+                } else {
+                    const type = document.getElementById('beamType').value;
+                    const size = document.getElementById('beamSize').value;
+                    const l = parseFloat(document.getElementById('beamL').value) || 0;
+                    const kgPerMeter = BEAM_DATA[type][size] || 0;
+                    weight = (l / 1000) * kgPerMeter;
+                    drawWeightSvg('beam', 0, 0, l, type, size);
+                }
+                document.getElementById('resW').textContent = weight.toFixed(2);
+                document.getElementById('weightRes').classList.remove('hidden');
+            }
+
+            document.getElementById('weightMode').addEventListener('change', toggleWeightMode);
+            document.getElementById('beamType').addEventListener('change', updateBeamSizes);
+            ['wL', 'wW', 'wD', 'mat', 'beamL', 'beamSize'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.addEventListener('input', calculateWeight);
+                    el.addEventListener('change', calculateWeight);
+                }
+            });
+            document.getElementById('weightForm').addEventListener('submit', (e) => { e.preventDefault(); calculateWeight(); });
+
+            // Init calls
+            updateWeldOptions();
+            window.calculateMiter();
+            drawDiagonalDiagramDefault();
+            drawRectDrawDiagramDefault();
+            updateBeamSizes();
+            toggleWeightMode();
+        });
+    </script>
+</body>
+</html>
