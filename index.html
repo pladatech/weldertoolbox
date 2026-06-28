@@ -6,19 +6,22 @@
     <meta name="theme-color" content="#020617">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.png" type="image/png">
     <title>ארגז כלים הנדסי</title>
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- פונט Rubik -->
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="manifest" href="./manifest.json">
-    <link rel="apple-touch-icon" href="./icon.png">
     
     <style>
         :root {
-            --bg-color: #020617;
-            --glass-bg: rgba(15, 23, 42, 0.7);
-            --glass-border: rgba(51, 65, 85, 0.5);
-            --accent: #f59e0b;
+            --bg-color: #020617; /* Slate 950 */
+            --glass-bg: rgba(15, 23, 42, 0.7); /* Slate 900 transparent */
+            --glass-border: rgba(51, 65, 85, 0.5); /* Slate 700 transparent */
+            --accent: #f59e0b; /* Amber 500 */
         }
 
         body {
@@ -30,6 +33,7 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
 
+        /* רקע דינמי עם תאורה עדינה */
         .app-bg {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -48,6 +52,7 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
+        /* שדות הזנה מותאמים למובייל (16px מינימום מונע זום בiOS) */
         .input-field, select {
             background-color: rgba(2, 6, 23, 0.6);
             border: 1px solid #334155;
@@ -63,6 +68,7 @@
             background-color: rgba(2, 6, 23, 0.9);
         }
 
+        /* כפתורים עם משוב למגע */
         .btn-amber {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: #020617;
@@ -81,6 +87,7 @@
         .btn-slate-outline:hover { background: rgba(30, 41, 59, 0.8); border-color: #475569; color: #fff; }
         .btn-slate-outline:active { transform: scale(0.97); }
 
+        /* סגנון CAD מתקדם ויחסי (Responsive SVG) */
         .tech-illustration {
             border: 1px solid #1e293b;
             background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
@@ -107,6 +114,7 @@
         .cad-fill-shade { fill: rgba(30, 41, 59, 0.8); }
         .cad-weld-fill { fill: #f59e0b; opacity: 0.25; stroke: #f59e0b; stroke-width: 0.5; }
 
+        /* מחשבון פשוט */
         .simple-calc-display { background: #020617; border: 1px solid #1e293b; box-shadow: inset 0 4px 10px rgba(0,0,0,0.5); }
         .simple-calc-btn { background: #1e293b; border: 1px solid #334155; box-shadow: 0 4px 0 #0f172a; transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1); }
         .simple-calc-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0f172a; }
@@ -117,13 +125,20 @@
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
 
+        /* אנימציית מעבר בין מסכים */
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* חגורת אזהרה - עיצוב הלקוח */
+        .warning-stripe {
+            background: repeating-linear-gradient(-45deg, #fbbf24 0, #fbbf24 10px, #18181b 10px, #18181b 20px);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
     <div class="app-bg"></div>
 
+    <!-- Header -->
     <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-5xl mx-auto flex flex-col items-center justify-center p-4 gap-2 text-center">
             <div class="bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 px-4 py-2 rounded-xl font-black text-xl sm:text-2xl tracking-wider shadow-lg">
@@ -136,46 +151,57 @@
         </div>
     </header>
 
+    <!-- Main Workspace -->
     <main class="max-w-5xl mx-auto p-4 sm:p-6 w-full flex-grow flex items-start justify-center pb-12">
 
+        <!-- ============================================== -->
+        <!-- תפריט ראשי -->
+        <!-- ============================================== -->
         <div id="mainMenu" class="calculator-view glass-card p-5 sm:p-8 rounded-3xl w-full max-w-2xl fade-in">
             <h2 class="text-lg sm:text-xl font-bold text-center mb-6 text-slate-200">בחר כלי עבודה</h2>
             <div class="grid grid-cols-2 gap-3 sm:gap-4">
-                <button onclick="showView('simpleCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                <button onclick="showView('simpleCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center col-span-2 hover:border-amber-500/50">
                     <span class="text-2xl sm:text-3xl">🔢</span>
                     <span class="font-bold text-white text-sm">מחשבון פשוט</span>
-                </button>
-                <button onclick="showView('diagonalCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
-                    <span class="text-2xl sm:text-3xl">🔳</span>
-                    <span class="font-bold text-white text-sm">מחשבון דיאגונל</span>
                 </button>
                 <button onclick="showView('rectDrawCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
                     <span class="text-2xl sm:text-3xl">📐</span>
                     <span class="font-bold text-white text-sm">תכנון חיתוך</span>
                 </button>
-                <button onclick="showView('weightCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
-                    <span class="text-2xl sm:text-3xl">⚖️</span>
-                    <span class="font-bold text-white text-sm">משקל חומרים</span>
-                </button>
-                <button onclick="showView('weldCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
-                    <span class="text-2xl sm:text-3xl">🔥</span>
-                    <span class="font-bold text-white text-sm">חומר רתך</span>
-                </button>
                 <button onclick="showView('miterCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
                     <span class="text-2xl sm:text-3xl">📐</span>
-                    <span class="font-bold text-white text-sm">חיתוך זוויות לפרופילים</span>
+                    <span class="font-bold text-white text-sm">חיתוך זוויות</span>
                 </button>
-                <button onclick="showView('stairCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
-                    <span class="text-2xl sm:text-3xl">🪜</span>
-                    <span class="font-bold text-white text-sm">תכנון מדרגות</span>
+                <button onclick="showView('diagonalCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                    <span class="text-2xl sm:text-3xl">🔳</span>
+                    <span class="font-bold text-white text-sm">מחשבון דיאגונל</span>
                 </button>
                 <button onclick="showView('spacingCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
                     <span class="text-2xl sm:text-3xl">📏</span>
                     <span class="font-bold text-white text-sm">חלוקה שווה</span>
                 </button>
+                <button onclick="showView('weightCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                    <span class="text-2xl sm:text-3xl">⚖️</span>
+                    <span class="font-bold text-white text-sm">משקל חומרים</span>
+                </button>
+                <button onclick="showView('profileCutCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                    <span class="text-2xl sm:text-3xl">✂️</span>
+                    <span class="font-bold text-white text-sm">אופטימיזציית חיתוך</span>
+                </button>
+                <button onclick="showView('weldCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                    <span class="text-2xl sm:text-3xl">🔥</span>
+                    <span class="font-bold text-white text-sm">חישוב משקל ריתוך</span>
+                </button>
+                <button onclick="showView('weldSpecCalc')" class="btn-slate-outline p-4 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-amber-500/50">
+                    <span class="text-2xl sm:text-3xl">📋</span>
+                    <span class="font-bold text-white text-sm">מפרט ריתוך</span>
+                </button>
             </div>
         </div>
 
+        <!-- ============================================== -->
+        <!-- מחשבון פשוט -->
+        <!-- ============================================== -->
         <div id="simpleCalc" class="calculator-view hidden glass-card p-5 sm:p-6 rounded-3xl w-full max-w-sm fade-in">
             <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
                 <span>←</span> חזרה לתפריט
@@ -208,15 +234,21 @@
             </div>
         </div>
 
+        <!-- ============================================== -->
+        <!-- מחשבון דיאגונל -->
+        <!-- ============================================== -->
         <div id="diagonalCalc" class="calculator-view hidden glass-card p-5 sm:p-8 rounded-3xl w-full max-w-lg fade-in">
             <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
                 <span>←</span> חזרה
             </button>
             <h2 class="text-xl font-bold text-white mb-4">מחשבון דיאגונל</h2>
+            
             <div class="tech-illustration p-4 mb-6 flex items-center justify-center aspect-video w-full">
                 <div class="tech-grid-bg absolute inset-0"></div>
-                <svg id="diagonalSvg" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" class="w-full h-full z-10 drop-shadow-md"></svg>
+                <svg id="diagonalSvg" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" class="w-full h-full z-10 drop-shadow-md">
+                </svg>
             </div>
+
             <form id="diagonalForm" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -238,15 +270,21 @@
             </div>
         </div>
 
+        <!-- ============================================== -->
+        <!-- תכנון חיתוך (טריגו) -->
+        <!-- ============================================== -->
         <div id="rectDrawCalc" class="calculator-view hidden glass-card p-5 sm:p-8 rounded-3xl w-full max-w-lg fade-in">
             <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
                 <span>←</span> חזרה
             </button>
             <h2 class="text-xl font-bold text-white mb-4">תכנון חיתוך (טריגונומטריה)</h2>
+            
             <div class="tech-illustration p-4 mb-6 flex items-center justify-center aspect-video w-full">
                 <div class="tech-grid-bg absolute inset-0"></div>
-                <svg id="rectDrawSvg" viewBox="0 0 200 150" class="w-full h-full z-10 drop-shadow-md"></svg>
+                <svg id="rectDrawSvg" viewBox="0 0 200 150" class="w-full h-full z-10 drop-shadow-md">
+                </svg>
             </div>
+
             <form id="rectDrawForm" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -287,15 +325,20 @@
             </div>
         </div>
 
+        <!-- ============================================== -->
+        <!-- משקל חומרים -->
+        <!-- ============================================== -->
         <div id="weightCalc" class="calculator-view hidden glass-card p-5 sm:p-8 rounded-3xl w-full max-w-lg fade-in">
             <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
                 <span>←</span> חזרה
             </button>
             <h2 class="text-xl font-bold text-white mb-6">משקל חומרים</h2>
+            
             <div class="tech-illustration p-4 mb-6 flex items-center justify-center min-h-[160px] sm:min-h-[200px] w-full">
                 <div class="tech-grid-bg absolute inset-0"></div>
                 <svg id="weightSvg" class="w-full h-full z-10 drop-shadow-md"></svg>
             </div>
+
             <form id="weightForm" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -314,6 +357,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div id="weightPlateInputs" class="grid grid-cols-3 gap-3">
                     <div>
                         <label class="block text-xs text-slate-500 mb-1">אורך (mm)</label>
@@ -328,6 +372,7 @@
                         <input type="number" id="wD" class="w-full p-3.5 input-field rounded-xl font-mono text-center">
                     </div>
                 </div>
+
                 <div id="weightBeamInputs" class="grid grid-cols-3 gap-3 hidden">
                     <div>
                         <label class="block text-xs text-slate-500 mb-1">פרופיל</label>
@@ -357,11 +402,15 @@
             </div>
         </div>
 
+        <!-- ============================================== -->
+        <!-- מחשבון כמות חומר רתך -->
+        <!-- ============================================== -->
         <div id="weldCalc" class="calculator-view hidden glass-card p-4 sm:p-8 rounded-3xl w-full max-w-4xl fade-in">
             <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
                 <span>←</span> חזרה
             </button>
-            <h2 class="text-xl font-bold text-white mb-6">מחשבון כמות חומר רתך</h2>
+            <h2 class="text-xl font-bold text-white mb-6">חישוב משקל ריתוך</h2>
+            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                 <div class="space-y-6">
                     <div class="bg-slate-900/80 border border-slate-700/50 p-4 sm:p-5 rounded-2xl shadow-inner">
@@ -465,6 +514,163 @@
             </div>
         </div>
 
+        <!-- ============================================== -->
+        <!-- מחשבון מפרט ריתוך (WPS) החדש -->
+        <!-- ============================================== -->
+        <div id="weldSpecCalc" class="calculator-view hidden glass-card p-5 sm:p-8 rounded-3xl w-full max-w-4xl fade-in">
+            <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
+                <span>←</span> חזרה לתפריט
+            </button>
+            
+            <div class="bg-slate-900/80 border border-slate-700/50 rounded-2xl overflow-hidden shadow-2xl relative">
+                <!-- פס אזהרה עליון -->
+                <div class="h-2 w-full warning-stripe border-b border-slate-700"></div>
+                
+                <div class="p-4 sm:p-6 lg:p-8">
+                    <header class="mb-6 sm:mb-8 border-b border-slate-700 pb-4 sm:pb-6 flex items-start justify-between">
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <div class="bg-amber-500 p-2 sm:p-3 rounded-lg text-slate-950 shadow-inner flex items-center justify-center">
+                                <span class="text-2xl sm:text-3xl">📋</span>
+                            </div>
+                            <div>
+                                <h2 class="text-xl sm:text-2xl font-black text-amber-500 uppercase tracking-wide">
+                                    מפרט ריתוך <span class="text-slate-500 font-normal">|</span> <span class="text-slate-100">בחירת תהליך</span>
+                                </h2>
+                                <p class="text-slate-400 mt-1 font-medium font-mono text-[10px] sm:text-xs">TOOLBOX.WPS_SELECTOR // V1.0</p>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- לוח בקרה - בחירה -->
+                    <div class="bg-slate-950/50 p-4 sm:p-6 border border-slate-700/50 rounded-xl mb-6 sm:mb-8 shadow-inner">
+                        <div class="flex items-center gap-2 mb-4 sm:mb-6 text-amber-500 border-b border-slate-700/50 pb-2">
+                            <span class="text-lg">⚙️</span>
+                            <h3 class="font-bold text-sm sm:text-base uppercase tracking-wider">פאנל הגדרות תהליך</h3>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                            <!-- שלב 1: קטגוריה -->
+                            <div>
+                                <label class="block text-xs sm:text-sm font-bold text-slate-400 mb-2 uppercase tracking-wide">
+                                    [1] סוג חומר בסיס
+                                </label>
+                                <select id="weldSpecCategory" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-3 text-amber-500 font-bold focus:outline-none focus:border-amber-500 transition-colors shadow-inner text-sm sm:text-base appearance-none">
+                                    <option value="" disabled selected>-- הגדר קטגוריה --</option>
+                                </select>
+                            </div>
+
+                            <!-- שלב 2: סגסוגת -->
+                            <div id="weldSpecAlloyContainer" class="opacity-30 pointer-events-none transition-opacity duration-300">
+                                <label class="block text-xs sm:text-sm font-bold text-slate-400 mb-2 uppercase tracking-wide">
+                                    [2] סגסוגת / תקן
+                                </label>
+                                <div class="relative">
+                                    <select id="weldSpecAlloy" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-3 text-amber-500 font-bold focus:outline-none focus:border-amber-500 transition-colors shadow-inner text-sm sm:text-base appearance-none" disabled>
+                                        <option value="" disabled selected>-- הגדר פלדה/סגסוגת --</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- אזור תוצאות ריק -->
+                    <div id="weldSpecEmptyState" class="bg-slate-950/80 border border-slate-800 p-8 sm:p-12 text-center text-slate-600 rounded-xl relative overflow-hidden">
+                        <span class="text-4xl sm:text-5xl opacity-20 block mb-4">🛡️</span>
+                        <p class="font-mono text-xs sm:text-sm uppercase tracking-widest">מערכת מוכנה - ממתין להזנת נתונים</p>
+                        <div class="tech-grid-bg absolute inset-0 pointer-events-none opacity-20"></div>
+                    </div>
+
+                    <!-- תצוגת תוצאות -->
+                    <div id="weldSpecResultContainer" class="hidden space-y-4 sm:space-y-6 fade-in">
+                        <div class="bg-slate-950 border border-slate-700/50 p-4 sm:p-6 rounded-xl relative">
+                            <!-- ברגים -->
+                            <div class="absolute top-2 left-2 w-1.5 h-1.5 rounded-full bg-slate-700 shadow-inner"></div>
+                            <div class="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-slate-700 shadow-inner"></div>
+                            <div class="absolute bottom-2 left-2 w-1.5 h-1.5 rounded-full bg-slate-700 shadow-inner"></div>
+                            <div class="absolute bottom-2 right-2 w-1.5 h-1.5 rounded-full bg-slate-700 shadow-inner"></div>
+
+                            <h3 class="text-xl sm:text-2xl font-black text-slate-100 mb-4 border-b border-slate-800 pb-2">
+                                <span class="text-amber-500 mr-2">&gt;</span><span id="specResName"></span>
+                            </h3>
+                            
+                            <!-- תכונות מכניות -->
+                            <div class="grid grid-cols-3 gap-2 mb-4 sm:mb-6">
+                                <div class="bg-slate-800/50 border border-slate-700/50 rounded-lg p-2 sm:p-3 flex flex-col items-center text-center">
+                                    <span class="text-blue-400 mb-1 text-sm sm:text-lg">📈</span>
+                                    <span class="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-widest mb-1">חוזק תפוקה</span>
+                                    <span class="text-xs sm:text-sm font-bold text-slate-200"><span id="specResYield"></span> <span class="text-[10px] font-normal text-slate-500">MPa</span></span>
+                                </div>
+                                <div class="bg-slate-800/50 border border-slate-700/50 rounded-lg p-2 sm:p-3 flex flex-col items-center text-center">
+                                    <span class="text-red-400 mb-1 text-sm sm:text-lg">📉</span>
+                                    <span class="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-widest mb-1">חוזק מתיחה</span>
+                                    <span class="text-xs sm:text-sm font-bold text-slate-200"><span id="specResTensile"></span> <span class="text-[10px] font-normal text-slate-500">MPa</span></span>
+                                </div>
+                                <div class="bg-slate-800/50 border border-slate-700/50 rounded-lg p-2 sm:p-3 flex flex-col items-center text-center">
+                                    <span class="text-slate-300 mb-1 text-sm sm:text-lg">💎</span>
+                                    <span class="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-widest mb-1">קשיות</span>
+                                    <span id="specResHardness" class="text-xs sm:text-sm font-bold text-slate-200"></span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                                <!-- MIG -->
+                                <div class="bg-slate-900 border border-slate-700 p-3 sm:p-4 border-l-4 border-l-amber-500 rounded-r-lg">
+                                    <h4 class="text-[10px] sm:text-xs text-slate-500 mb-1.5 font-bold uppercase tracking-widest">MIG / MAG</h4>
+                                    <p id="specResMig" class="text-sm sm:text-base font-mono text-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.3)]"></p>
+                                </div>
+                                <!-- TIG -->
+                                <div class="bg-slate-900 border border-slate-700 p-3 sm:p-4 border-l-4 border-l-amber-500 rounded-r-lg">
+                                    <h4 class="text-[10px] sm:text-xs text-slate-500 mb-1.5 font-bold uppercase tracking-widest">TIG (GTAW)</h4>
+                                    <p id="specResTig" class="text-sm sm:text-base font-mono text-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.3)]"></p>
+                                </div>
+                                <!-- SMAW -->
+                                <div class="bg-slate-900 border border-slate-700 p-3 sm:p-4 border-l-4 border-l-amber-500 rounded-r-lg">
+                                    <h4 class="text-[10px] sm:text-xs text-slate-500 mb-1.5 font-bold uppercase tracking-widest">SMAW (Stick)</h4>
+                                    <p id="specResSmaw" class="text-sm sm:text-base font-mono text-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.3)]"></p>
+                                </div>
+                            </div>
+
+                            <!-- חימום מוקדם -->
+                            <div class="mt-4 sm:mt-6 flex items-start gap-3 sm:gap-4 bg-slate-900 border border-slate-700 p-3 sm:p-4 border-r-4 border-r-orange-500 rounded-l-lg">
+                                <span class="text-xl sm:text-2xl mt-0.5">🌡️</span>
+                                <div>
+                                    <h4 class="text-xs sm:text-sm font-bold text-orange-500 mb-1 uppercase tracking-wide">דרישות חימום (Preheat/Interpass)</h4>
+                                    <p id="specResPreheat" class="text-slate-300 font-mono text-xs sm:text-sm"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- הערות אזהרה -->
+                        <div class="bg-amber-500 text-slate-950 rounded-lg p-1 shadow-lg">
+                            <div class="border-2 border-slate-950 border-dashed rounded-md p-3 sm:p-4 flex items-start gap-3 sm:gap-4">
+                                <span class="text-2xl sm:text-3xl">⚠️</span>
+                                <div>
+                                    <h4 class="text-sm sm:text-base font-black mb-1 uppercase tracking-wider">הנחיות הנדסיות חובה</h4>
+                                    <p id="specResNotes" class="text-slate-900 font-medium leading-relaxed text-xs sm:text-sm"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer דיגיטלי -->
+                    <div class="mt-6 sm:mt-8 pt-4 border-t border-slate-800 text-center flex flex-col items-center gap-2">
+                        <div class="flex gap-1">
+                           <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                           <div class="w-1.5 h-1.5 rounded-full bg-slate-700"></div>
+                           <div class="w-1.5 h-1.5 rounded-full bg-slate-700"></div>
+                        </div>
+                        <p class="text-[8px] sm:text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+                          הנתונים הינם נומינליים. עבודה מאושרת רק בכפוף ל-WPS ספציפי.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- מחשבון חיתוך זוויות פרופילים -->
+        <!-- ============================================== -->
         <div id="miterCalc" class="calculator-view hidden flex-col w-full fade-in">
             <div class="w-full max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <div class="lg:col-span-12">
@@ -518,6 +724,7 @@
                         </div>
                     </div>
 
+                    <!-- אזור הדמיה יחסי (aspect-ratio) -->
                     <div class="tech-illustration flex items-center justify-center w-full aspect-square max-h-[60vh] sm:aspect-video relative">
                         <div class="tech-grid-bg absolute inset-0"></div>
                         <svg id="miterSvg" class="w-full h-full z-10 p-2 overflow-visible"></svg>
@@ -526,66 +733,23 @@
             </div>
         </div>
 
-        <div id="stairCalc" class="calculator-view hidden glass-card p-5 sm:p-8 rounded-3xl w-full max-w-lg fade-in">
-            <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
-                <span>←</span> חזרה
-            </button>
-            <h2 class="text-xl font-bold text-white mb-4">תכנון מדרגות (תקן)</h2>
-            <div class="tech-illustration p-4 mb-6 flex items-center justify-center aspect-video w-full">
-                <div class="tech-grid-bg absolute inset-0"></div>
-                <svg viewBox="0 0 100 60" class="w-full h-full z-10 drop-shadow-md">
-                    <path d="M 10 50 L 10 30 L 45 30 L 45 10 L 80 10" class="cad-line-main" />
-                    <path d="M 45 30 L 52 30" class="cad-line-dim" />
-                    <text x="6" y="40" class="svg-label cad-text-dim" transform="rotate(-90, 6, 40)" text-anchor="middle">Riser</text>
-                    <text x="27" y="27" class="svg-label cad-text-dim" text-anchor="middle">Tread</text>
-                    <text x="48" y="27" class="svg-label cad-text-obj">Nose</text>
-                </svg>
-            </div>
-            <form id="stairForm" class="space-y-4">
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">גובה המפלס (cm)</label>
-                    <input type="number" step="any" id="stairH" required class="w-full p-3.5 input-field rounded-xl font-mono text-center">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1">מספר מדרגות</label>
-                        <input type="number" id="stairN" class="w-full p-3.5 input-field rounded-xl font-mono text-center" placeholder="אוטומטי">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1">רום רצוי (cm)</label>
-                        <input type="number" step="any" id="stairR" class="w-full p-3.5 input-field rounded-xl font-mono text-center" placeholder="~17">
-                    </div>
-                </div>
-                <button type="submit" class="w-full btn-amber p-4 rounded-xl mt-4">חשב מהלך</button>
-            </form>
-            <div id="stairResultContainer" class="hidden mt-6 bg-slate-900/80 border border-slate-700/50 p-5 rounded-2xl space-y-3 font-mono text-sm shadow-inner">
-                <div class="flex justify-between border-b border-slate-800/80 pb-2">
-                    <span class="text-slate-500">שלבים (N):</span>
-                    <span id="resSN" class="font-bold text-white text-lg">0</span>
-                </div>
-                <div class="flex justify-between border-b border-slate-800/80 pb-2">
-                    <span class="text-slate-500">רום (R):</span>
-                    <span id="resSR" class="font-bold text-amber-400 text-lg">0 cm</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-slate-500">שלח (T):</span>
-                    <span id="resST" class="font-bold text-blue-400 text-lg">0 cm</span>
-                </div>
-            </div>
-        </div>
-
+        <!-- ============================================== -->
+        <!-- חלוקה שווה -->
+        <!-- ============================================== -->
         <div id="spacingCalc" class="calculator-view hidden glass-card p-5 sm:p-8 rounded-3xl w-full max-w-lg fade-in">
             <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
                 <span>←</span> חזרה
             </button>
             <h2 class="text-xl font-bold text-white mb-4">חלוקת רווחים</h2>
+            
             <div class="tech-illustration p-4 mb-6 flex items-center justify-center aspect-video w-full">
                 <div class="tech-grid-bg absolute inset-0"></div>
                 <svg id="spacingSvg" viewBox="0 0 100 45" class="w-full h-full z-10 drop-shadow-md">
                     <rect x="5" y="10" width="90" height="25" class="cad-line-dim"/>
-                    <text x="50" y="25" class="svg-label cad-text-dim" text-anchor="middle">Ready for Input</text>
+                    <text x="50" y="25" class="svg-label cad-text-dim" style="font-size:3px;" text-anchor="middle">READY FOR INPUT</text>
                 </svg>
             </div>
+
             <form id="spacingForm" class="space-y-4">
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">רוחב הפתח (mm)</label>
@@ -608,6 +772,7 @@
                     </select>
                 </div>
             </form>
+
             <div id="spacingResultContainer" class="hidden mt-6 bg-slate-900/80 border border-slate-700/50 p-5 rounded-2xl text-center shadow-inner">
                 <p class="text-xs text-slate-500 mb-1">רווח פנימי נקי (S):</p>
                 <div class="flex items-center justify-center gap-2">
@@ -617,43 +782,569 @@
             </div>
         </div>
 
+        <!-- ============================================== -->
+        <!-- מחשבון חיתוך פרופילים ואופטימיזציית פחת -->
+        <!-- ============================================== -->
+        <div id="profileCutCalc" class="calculator-view hidden glass-card p-5 sm:p-8 rounded-3xl w-full max-w-4xl fade-in">
+            <button onclick="showView('mainMenu')" class="text-slate-400 hover:text-white flex items-center gap-2 font-medium text-sm mb-4 active:scale-95 transition-transform">
+                <span>←</span> חזרה לתפריט
+            </button>
+            <h2 class="text-xl sm:text-2xl font-bold text-white mb-6 border-b border-slate-700 pb-3">אופטימיזציית חיתוך (פחת)</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- הגדרות מלאי וחלקים -->
+                <div class="md:col-span-1 space-y-6">
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700/50 shadow-inner">
+                        <h3 class="text-sm font-bold text-amber-500 mb-3 uppercase tracking-wider">נתוני גלם</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">אורך מוט שלם (mm)</label>
+                                <input type="number" id="optStockLen" value="6000" class="w-full p-2.5 input-field rounded-lg font-mono text-center">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">עובי מסור/פחת (mm)</label>
+                                <input type="number" id="optKerf" value="3" class="w-full p-2.5 input-field rounded-lg font-mono text-center">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700/50 shadow-inner flex flex-col max-h-[350px]">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-sm font-bold text-amber-500 uppercase tracking-wider">רשימת חיתוך</h3>
+                            <button id="optAddPartBtn" class="text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm font-bold bg-emerald-400/10 px-2 py-1 rounded transition-colors">+ הוסף</button>
+                        </div>
+                        <div id="optPartsContainer" class="space-y-2 overflow-y-auto pr-1 flex-grow">
+                            <!-- Parts injected here -->
+                        </div>
+                    </div>
+
+                    <button id="optCalculateBtn" class="w-full btn-amber p-4 rounded-xl mt-4">חשב אופטימיזציה</button>
+                </div>
+
+                <!-- תוצאות ותצוגה ויזואלית -->
+                <div class="md:col-span-2 flex flex-col h-full min-h-[400px]">
+                    <div id="optEmptyState" class="bg-slate-950/80 border border-slate-800 p-8 text-center text-slate-600 rounded-xl h-full flex flex-col items-center justify-center relative overflow-hidden">
+                        <span class="text-4xl sm:text-5xl opacity-20 block mb-4">✂️</span>
+                        <p class="font-mono text-xs sm:text-sm uppercase tracking-widest">מערכת מוכנה לחישוב פריסה</p>
+                        <div class="tech-grid-bg absolute inset-0 pointer-events-none opacity-20"></div>
+                    </div>
+                    
+                    <div id="optResultsContainer" class="hidden flex-col h-full gap-4 fade-in">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-slate-900/80 border border-slate-700/50 p-4 rounded-xl text-center shadow-inner">
+                                <span class="block text-[10px] sm:text-xs text-slate-500 uppercase tracking-widest mb-1">מוטים נדרשים</span>
+                                <span id="optResBars" class="text-3xl sm:text-4xl font-black text-amber-400 font-mono drop-shadow-md">0</span>
+                            </div>
+                            <div class="bg-slate-900/80 border border-slate-700/50 p-4 rounded-xl text-center shadow-inner">
+                                <span class="block text-[10px] sm:text-xs text-slate-500 uppercase tracking-widest mb-1">פחת כולל</span>
+                                <span id="optResWaste" class="text-3xl sm:text-4xl font-black text-rose-400 font-mono drop-shadow-md">0%</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/80 border border-slate-700/50 p-4 sm:p-5 rounded-xl flex-grow overflow-y-auto shadow-inner">
+                            <h3 class="text-sm font-bold text-slate-300 mb-4 border-b border-slate-700/50 pb-2">תכנית חיתוך (פריסה):</h3>
+                            <div id="optBarsVisuals" class="space-y-4">
+                                <!-- Visual bars injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful');
-                    })
-                    .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-            });
-        }
-
         function showView(id) {
             document.querySelectorAll('.calculator-view').forEach(v => v.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
             window.scrollTo(0,0);
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Safe Calculator Function ---
-            function safeCalc(n1, operator, n2) {
-                const a = parseFloat(n1);
-                const b = parseFloat(n2);
-                if(isNaN(a) || isNaN(b)) return 'Error';
-                switch(operator) {
-                    case '+': return a + b;
-                    case '-': return a - b;
-                    case '*': return a * b;
-                    case '/': return b === 0 ? 'Error' : a / b;
-                    default: return 0;
-                }
+        // --- Miter Data & Logic ---
+        let isMiterEqualCut = true;
+        function setCutType(equal) {
+            isMiterEqualCut = equal;
+            const btnEqual = document.getElementById('cutTypeEqual');
+            const btnUnequal = document.getElementById('cutTypeUnequal');
+            const widthBContainer = document.getElementById('widthBContainer');
+            const widthALabel = document.getElementById('widthALabel');
+            if (equal) {
+                btnEqual.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all btn-amber shadow-md";
+                btnUnequal.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all text-slate-400 hover:text-white";
+                widthBContainer.classList.add('hidden');
+                widthALabel.innerText = "רוחב פרופיל";
+            } else {
+                btnUnequal.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all btn-amber shadow-md";
+                btnEqual.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all text-slate-400 hover:text-white";
+                widthBContainer.classList.remove('hidden');
+                widthALabel.innerText = "פרופיל א'";
+            }
+            calculateMiter();
+        }
+        function calculateMiter() {
+            let theta = parseFloat(document.getElementById('cornerAngle').value);
+            if (isNaN(theta)) theta = 90;
+            let w1 = parseFloat(document.getElementById('widthA').value) || 50;
+            let w2 = w1;
+            if (!isMiterEqualCut) {
+                w2 = parseFloat(document.getElementById('widthB').value) || 50;
+            }
+            const phi = 180 - theta;
+            const phiRad = (phi * Math.PI) / 180;
+            let s1 = 0, s2 = 0;
+            if (isMiterEqualCut) { s1 = phi / 2; s2 = phi / 2; } 
+            else {
+                const num = w2 - w1 * Math.cos(phiRad);
+                const den = w1 * Math.sin(phiRad);
+                const s1Rad = Math.atan2(num, den);
+                s1 = (s1Rad * 180) / Math.PI;
+                s2 = phi - s1;
+            }
+            document.getElementById('angleAResult').innerText = s1.toFixed(1) + "°";
+            document.getElementById('angleBResult').innerText = s2.toFixed(1) + "°";
+            document.getElementById('internalAResult').innerText = (90 - s1).toFixed(1) + "°";
+            document.getElementById('internalBResult').innerText = (90 - s2).toFixed(1) + "°";
+            drawMiterDiagram(theta, w1, w2, s1, s2);
+        }
+        function drawMiterDiagram(theta, w1, w2, s1, s2) {
+            const M = 2.5; 
+            const pin = { x: 250 * M, y: 250 * M };
+            const maxW = Math.max(w1, w2);
+            const scale = (100 * M) / maxW;
+            const dw1 = Math.max(20 * M, w1 * scale);
+            const dw2 = Math.max(20 * M, w2 * scale);
+            const phiRad = ((180 - theta) * Math.PI) / 180;
+            const s1Rad = (s1 * Math.PI) / 180;
+            const s2Rad = (s2 * Math.PI) / 180;
+            const outX = pin.x + dw1 * Math.tan(s1Rad);
+            const outY = pin.y - dw1;
+            const pout = { x: outX, y: outY };
+            const L = 180 * M; 
+            const d2 = { x: -Math.cos(phiRad), y: -Math.sin(phiRad) };
+            const n2 = { x: Math.sin(phiRad), y: -Math.cos(phiRad) };
+            const outerEndA = { x: pin.x + L, y: pin.y - dw1 };
+            const innerEndA = { x: pin.x + L, y: pin.y };
+            const polyAPoints = `${pin.x},${pin.y} ${pout.x},${pout.y} ${outerEndA.x},${outerEndA.y} ${innerEndA.x},${innerEndA.y}`;
+            const innerEndB = { x: pin.x + L * d2.x, y: pin.y + L * d2.y };
+            const outerEndB = { x: innerEndB.x + dw2 * n2.x, y: innerEndB.y + dw2 * n2.y };
+            const polyBPoints = `${pin.x},${pin.y} ${pout.x},${pout.y} ${outerEndB.x},${outerEndB.y} ${innerEndB.x},${innerEndB.y}`;
+            
+            const arcR = 40 * M;
+            const sweepAngle = 180 - theta;
+            const arcEnd = { x: pin.x + arcR * Math.cos((180 - sweepAngle) * Math.PI / 180), y: pin.y - arcR * Math.sin((180 - sweepAngle) * Math.PI / 180) };
+            const largeArcFlag = sweepAngle > 180 ? 1 : 0;
+            const midAngleRad = ((180 - (sweepAngle / 2)) * Math.PI) / 180;
+            const textR = arcR + 20 * M;
+            const textX = pin.x + textR * Math.cos(midAngleRad);
+            const textY = pin.y + textR * Math.sin(midAngleRad);
+            
+            const intA = (90 - s1).toFixed(1) + '°';
+            const intB = (90 - s2).toFixed(1) + '°';
+
+            const textAX = outerEndA.x + 15 * M;
+            const textBX = (outerEndB.x + innerEndB.x)/2 + d2.x * 15 * M;
+
+            const safeDistA = dw1 * Math.tan(s1Rad) + 35 * M;
+            const safeDistB = dw2 * Math.tan(s2Rad) + 35 * M;
+            
+            const intTextAX = pin.x + safeDistA;
+            const intTextAY = pin.y - dw1 / 2; 
+            const intTextBX = pin.x + d2.x * safeDistB + n2.x * dw2 / 2;
+            const intTextBY = pin.y + d2.y * safeDistB + n2.y * dw2 / 2;
+
+            const xs = [pin.x, pout.x, outerEndA.x, innerEndA.x, outerEndB.x, innerEndB.x, textX, textAX, textBX, intTextAX, intTextBX];
+            const ys = [pin.y, pout.y, outerEndA.y, innerEndA.y, outerEndB.y, innerEndB.y, textY, intTextAY, intTextBY];
+            const pad = 40 * M;
+            const vMinX = Math.min(...xs) - pad;
+            const vMinY = Math.min(...ys) - pad;
+            const vW = Math.max(...xs) - Math.min(...xs) + pad * 2;
+            const vH = Math.max(...ys) - Math.min(...ys) + pad * 2;
+            
+            document.getElementById('miterSvg').setAttribute('viewBox', `${vMinX} ${vMinY} ${vW} ${vH}`);
+
+            const svgHtml = `
+                <polygon points="${polyAPoints}" class="cad-fill-shade" stroke="#ffffff" stroke-width="${1.5 * M}" vector-effect="non-scaling-stroke" />
+                <polygon points="${polyBPoints}" class="cad-fill-shade" stroke="#ffffff" stroke-width="${1.5 * M}" vector-effect="non-scaling-stroke" />
+                <line x1="${pin.x}" y1="${pin.y}" x2="${pout.x}" y2="${pout.y}" class="cad-line-center" stroke-width="${2 * M}" vector-effect="non-scaling-stroke" />
+                
+                <path d="M ${pin.x + arcR} ${pin.y} A ${arcR} ${arcR} 0 ${largeArcFlag} 0 ${arcEnd.x} ${arcEnd.y}" class="cad-line-dim" stroke-width="${1 * M}" vector-effect="non-scaling-stroke" />
+                <text x="${textX}" y="${textY}" class="svg-label cad-text-dim" style="font-size:${14 * M}px;" text-anchor="middle" dominant-baseline="central">${theta}°</text>
+                <circle cx="${pin.x}" cy="${pin.y}" r="${3 * M}" fill="#ffffff" />
+                
+                <line x1="${outerEndA.x + 10*M}" y1="${outerEndA.y}" x2="${innerEndA.x + 10*M}" y2="${innerEndA.y}" stroke="#3b82f6" stroke-width="${1 * M}" stroke-dasharray="${2*M},${2*M}" vector-effect="non-scaling-stroke"/>
+                <text x="${textAX}" y="${(outerEndA.y + innerEndA.y)/2}" class="svg-label cad-text-dim" style="font-size:${12 * M}px;" dominant-baseline="central">${w1}</text>
+                
+                <line x1="${outerEndB.x + d2.x*10*M}" y1="${outerEndB.y + d2.y*10*M}" x2="${innerEndB.x + d2.x*10*M}" y2="${innerEndB.y + d2.y*10*M}" stroke="#3b82f6" stroke-width="${1 * M}" stroke-dasharray="${2*M},${2*M}" vector-effect="non-scaling-stroke"/>
+                <text x="${textBX}" y="${(outerEndB.y + innerEndB.y)/2 + d2.y*15*M}" class="svg-label cad-text-dim" style="font-size:${12 * M}px;" text-anchor="middle" dominant-baseline="central">${w2}</text>
+                
+                <text x="${intTextAX}" y="${intTextAY}" class="svg-label" style="fill:#10b981; font-size:${11 * M}px;" dominant-baseline="central" text-anchor="middle">${intA}</text>
+                <text x="${intTextBX}" y="${intTextBY}" class="svg-label" style="fill:#10b981; font-size:${11 * M}px;" dominant-baseline="central" text-anchor="middle">${intB}</text>
+            `;
+            
+            document.getElementById('miterSvg').innerHTML = svgHtml;
+        }
+
+        // --- Weld Calculator Data ---
+        const WELD_FILLER_TYPES = {
+            smaw: [{ id: '6010', name: 'E6010 / E6011', eff: 0.55 }, { id: '7018', name: 'E7018', eff: 0.65 }, { id: '7024', name: 'E7024', eff: 0.70 }],
+            gmaw: [{ id: 'er70s', name: 'חוט מלא ER70S', eff: 0.95 }, { id: 'alum', name: 'חוט אלומיניום', eff: 0.90 }],
+            fcaw: [{ id: 'rutile', name: 'חוט ממולא רוטיל', eff: 0.85 }, { id: 'metal', name: 'חוט ממולא מתכת', eff: 0.90 }],
+            gtaw: [{ id: 'rod', name: 'מוט טיג', eff: 0.98 }]
+        };
+        const WELD_DIAS = {
+            smaw: [2.0, 2.5, 3.2, 4.0, 5.0],
+            gmaw: [0.6, 0.8, 1.0, 1.2, 1.6],
+            fcaw: [1.0, 1.2, 1.4, 1.6, 2.0],
+            gtaw: [1.6, 2.0, 2.4, 3.2, 4.0]
+        };
+
+        function updateWeldOptions() {
+            const proc = document.getElementById('weldProc').value;
+            const fillSel = document.getElementById('weldFiller');
+            const diaSel = document.getElementById('weldDia');
+            
+            fillSel.innerHTML = '';
+            WELD_FILLER_TYPES[proc].forEach(f => fillSel.add(new Option(f.name, f.id)));
+            
+            diaSel.innerHTML = '';
+            WELD_DIAS[proc].forEach(d => diaSel.add(new Option(d.toFixed(1), d)));
+            diaSel.selectedIndex = Math.floor(WELD_DIAS[proc].length / 2);
+
+            document.getElementById('weldPackWeight').value = (proc === 'smaw' || proc === 'gtaw') ? 5 : 15;
+            calculateWeld();
+        }
+
+        function toggleWeldJointParams() {
+            const joint = document.getElementById('weldJoint').value;
+            const vParams = document.getElementById('vGrooveParams');
+            const sizeLabel = document.getElementById('weldSizeLabel');
+            const throatContainer = document.getElementById('resWeldThroatContainer');
+            if (joint === 'fillet') {
+                vParams.classList.add('hidden');
+                sizeLabel.innerText = "מידת ניצב (mm)";
+                throatContainer.classList.remove('hidden');
+            } else {
+                vParams.classList.remove('hidden');
+                sizeLabel.innerText = "עובי החומר (mm)";
+                throatContainer.classList.add('hidden');
+            }
+            calculateWeld();
+        }
+
+        function calculateWeld() {
+            const matDensity = parseFloat(document.getElementById('weldMat').value) || 7.85;
+            const proc = document.getElementById('weldProc').value;
+            const fillerId = document.getElementById('weldFiller').value;
+            const jointType = document.getElementById('weldJoint').value;
+            const len = parseFloat(document.getElementById('weldLen').value) || 0;
+            const size = parseFloat(document.getElementById('weldSize').value) || 0;
+            const packWeight = parseFloat(document.getElementById('weldPackWeight').value) || 1;
+            
+            const currentFiller = WELD_FILLER_TYPES[proc].find(f => f.id === fillerId) || WELD_FILLER_TYPES[proc][0];
+            const eff = currentFiller.eff;
+
+            let area = 0;
+            if (jointType === 'fillet') {
+                area = (0.5 * size * size) * 1.1; 
+                document.getElementById('resWeldThroat').innerText = (size * 0.7071).toFixed(1) + " mm";
+                renderWeldSvg('fillet', size);
+            } else {
+                const gap = parseFloat(document.getElementById('weldGap').value) || 0;
+                const angle = parseFloat(document.getElementById('weldAngle').value) || 0;
+                const rootArea = gap * size;
+                const angleRad = (angle / 2) * (Math.PI / 180);
+                const grooveArea = Math.pow(size, 2) * Math.tan(angleRad);
+                area = (rootArea + grooveArea) * 1.1;
+                renderWeldSvg('v_groove', size, gap, angle);
             }
 
-            // --- Simple Calc Logic ---
+            if (area === 0 || len === 0) {
+                document.getElementById('resWeldReq').innerText = "0.00 kg";
+                document.getElementById('resWeldEff').innerText = (eff * 100).toFixed(0) + "%";
+                document.getElementById('resWeldPacks').innerText = "0";
+                return;
+            }
+
+            const theoW = (area * len * matDensity) / 1000;
+            const reqW = theoW / eff;
+            const packs = Math.ceil(reqW / packWeight);
+
+            document.getElementById('resWeldReq').innerText = reqW.toFixed(2) + " kg";
+            document.getElementById('resWeldEff').innerText = (eff * 100).toFixed(0) + "%";
+            document.getElementById('resWeldPacks').innerText = packs;
+        }
+
+        function renderWeldSvg(type, size, gap, angle) {
+            const svgContainer = document.getElementById('weldSvgContainer');
+            if (type === 'fillet') {
+                svgContainer.innerHTML = `
+                    <svg viewBox="0 0 100 80" class="w-full h-full max-h-[140px]">
+                        <path d="M 20 10 L 40 10 L 40 70 L 90 70 L 90 90 L 20 90 Z" class="cad-fill-shade" stroke="#ffffff" stroke-width="1.5" vector-effect="non-scaling-stroke" />
+                        <path d="M 40 30 Q 60 50 70 70 L 40 70 Z" class="cad-weld-fill" />
+                        <line x1="35" y1="30" x2="25" y2="30" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                        <line x1="35" y1="70" x2="25" y2="70" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                        <line x1="30" y1="30" x2="30" y2="70" stroke="#3b82f6" stroke-width="0.75" vector-effect="non-scaling-stroke" />
+                        <text x="15" y="52" class="svg-label cad-text-dim">a=${size}</text>
+                    </svg>
+                `;
+            } else {
+                svgContainer.innerHTML = `
+                    <svg viewBox="0 0 100 80" class="w-full h-full max-h-[140px]">
+                        <path d="M 5 20 L 40 20 L 48 70 L 5 70 Z" class="cad-fill-shade" stroke="#ffffff" stroke-width="1.5" vector-effect="non-scaling-stroke" />
+                        <path d="M 95 20 L 60 20 L 52 70 L 95 70 Z" class="cad-fill-shade" stroke="#ffffff" stroke-width="1.5" vector-effect="non-scaling-stroke" />
+                        <path d="M 40 20 Q 50 15 60 20 L 52 70 L 48 70 Z" class="cad-weld-fill" />
+                        <line x1="48" y1="75" x2="48" y2="85" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                        <line x1="52" y1="75" x2="52" y2="85" class="cad-line-dim" vector-effect="non-scaling-stroke" />
+                        <line x1="48" y1="80" x2="52" y2="80" stroke="#3b82f6" stroke-width="0.75" vector-effect="non-scaling-stroke" />
+                        <text x="50" y="90" class="svg-label cad-text-dim" text-anchor="middle">g=${gap}</text>
+                        <path d="M 45 15 A 20 20 0 0 1 55 15" fill="none" stroke="#3b82f6" stroke-width="0.75" vector-effect="non-scaling-stroke" />
+                        <text x="50" y="10" class="svg-label cad-text-dim" text-anchor="middle">${angle}°</text>
+                    </svg>
+                `;
+            }
+        }
+
+        // --- Weld Spec Selector Data & Logic ---
+        const materialsDatabase = [
+          {
+            category: "פלדות מבניות (Carbon Steel)",
+            items: [
+              {
+                id: "s235", name: "S235 / ST37", mig: "ER70S-6", tig: "ER70S-2 / ER70S-6", smaw: "E7018 / E6013",
+                preheat: "לרוב ללא (תלוי עובי)", notes: "מקבילה לתקן DIN ST37. פלדה מבנית סטנדרטית. ניתנת לריתוך בכל השיטות ללא מגבלות מיוחדות.",
+                properties: { yield: "235", tensile: "360-510", hardness: "~120 HB" }
+              },
+              {
+                id: "s275", name: "S275 / ST44", mig: "ER70S-6", tig: "ER70S-2 / ER70S-6", smaw: "E7018",
+                preheat: "לרוב ללא (תלוי עובי)", notes: "מקבילה לתקן DIN ST44. פלדה מבנית סטנדרטית. מומלץ שימוש באלקטרודות מימן נמוך (E7018) ליישומים קונסטרוקטיביים.",
+                properties: { yield: "275", tensile: "410-560", hardness: "~150 HB" }
+              },
+              {
+                id: "s355", name: "S355 / ST52", mig: "ER70S-6", tig: "ER70S-2 / ER70S-6", smaw: "E7018",
+                preheat: "20°C - 100°C (מעל עובי 20 מ\"מ)", notes: "מקבילה לתקן DIN ST52. פלדה קונסטרוקטיבית נפוצה. חובה שימוש בחומרי מימן נמוך (Low Hydrogen).",
+                properties: { yield: "355", tensile: "470-630", hardness: "~170 HB" }
+              },
+              {
+                id: "s460", name: "S460 / ST60", mig: "ER80S-D2 / ER70S-6", tig: "ER80S-D2 / ER70S-2", smaw: "E8018 / E7018",
+                preheat: "75°C - 150°C", notes: "מקבילה לתקן DIN ST60. פלדה מבנית בחוזק גבוה. בחירת חומר המילוי תלויה בדרישות החוזק של התפר עצמו (Undermatching מותר לעיתים).",
+                properties: { yield: "460", tensile: "540-720", hardness: "~200 HB" }
+              }
+            ]
+          },
+          {
+            category: "פלדות בחוזק גבוה (High Strength)",
+            items: [
+              {
+                id: "strenx700", name: "Strenx 700", mig: "ER100S-G", tig: "ER100S-G", smaw: "E10018-G / E9018-G",
+                preheat: "75°C (מעל 15 מ\"מ)", notes: "נדרשת שליטה בקלט החום (Heat Input) למניעת התרככות אזור ה-HAZ.",
+                properties: { yield: "700", tensile: "780-930", hardness: "~260 HB" }
+              },
+              {
+                id: "strenx900", name: "Strenx 900", mig: "ER120S-G", tig: "ER120S-G", smaw: "E12018-M",
+                preheat: "100°C (מעל 10 מ\"מ)", notes: "רגישות גבוהה לסדקי מימן. יש לשמור על ניקיון ושימוש בחומרי מילוי מימן נמוך.",
+                properties: { yield: "900", tensile: "940-1100", hardness: "~300 HB" }
+              },
+              {
+                id: "strenx960", name: "Strenx 960", mig: "ER120S-G", tig: "ER120S-G", smaw: "E12018-M",
+                preheat: "100°C - 150°C", notes: "זהה ל-900 אך עם הקפדה יתרה על טמפרטורה בין-מעברית (Interpass) מקסימלית של 200°C.",
+                properties: { yield: "960", tensile: "980-1150", hardness: "~330 HB" }
+              },
+              {
+                id: "strenx1100", name: "Strenx 1100", mig: "ER120S-G (Undermatching)", tig: "ER120S-G", smaw: "E12018-M",
+                preheat: "150°C - 175°C", notes: "מומלץ להשתמש בחומר מילוי רך יותר (Undermatching) כדי לספק גמישות לתפר ולמנוע סדקים עקב ריכוז מאמצים.",
+                properties: { yield: "1100", tensile: "1250-1400", hardness: "~380 HB" }
+              },
+              {
+                id: "strenx1300", name: "Strenx 1300", mig: "ER120S-G (Undermatching)", tig: "ER120S-G", smaw: "E12018-M",
+                preheat: "150°C - 200°C", notes: "חובה לעבוד בשיטת Undermatching (שימוש בחומר מילוי בעל חוזק נמוך מחומר הבסיס). בקרת קלט חום וקירור מחמירה ביותר.",
+                properties: { yield: "1300", tensile: "1400-1550", hardness: "~430 HB" }
+              }
+            ]
+          },
+          {
+            category: "פלדות שחיקה (AR / Hardox)",
+            items: [
+              {
+                id: "ar400", name: "AR 400 / Hardox 400", mig: "ER70S-6 (לחיבור) / חוט ציפוי (לשחיקה)", tig: "ER70S-2 (לחיבור)", smaw: "E7018 / E8018",
+                preheat: "75°C (מעל 20 מ\"מ)", notes: "לחיבור מבני מומלץ חומר מילוי רך (Undermatching) כגון ER70S-6 למניעת סדקים. הציפוי העליון (Hardfacing) ייעשה בחומר ייעודי לשחיקה.",
+                properties: { yield: "~1000", tensile: "~1250", hardness: "370-430 HBW" }
+              },
+              {
+                id: "ar500", name: "AR 500 / Hardox 500", mig: "ER70S-6 / ER307 (אוסטניטי)", tig: "ER70S-2 / ER307", smaw: "E7018 / E307",
+                preheat: "150°C - 200°C", notes: "חובה חימום מוקדם. בסביבה מועדת לסדקים מומלץ חיבור עם נירוסטה אוסטניטית (307) שמספקת גמישות לתפר.",
+                properties: { yield: "~1300", tensile: "~1550", hardness: "470-530 HBW" }
+              }
+            ]
+          },
+          {
+            category: "פלדות שריון (Armor / MARS)",
+            items: [
+              {
+                id: "mars280", name: "MARS 280", mig: "ER70S-6 (לחיבור) / ER307", tig: "ER70S-2 / ER307", smaw: "E7018 / E307",
+                preheat: "75°C - 100°C", notes: "פלדת שריון מסוג RHA. ריתכות טובה. ניתן להשתמש בחומרי מילוי פריטיים סטנדרטיים, אך במבנים החשופים להדף ורעידות מומלץ מעבר לאוסטניטי (307) למניעת סדקים.",
+                properties: { yield: "~1000", tensile: "~1200", hardness: "260-300 HBW" }
+              },
+              {
+                id: "mars440", name: "MARS 440", mig: "ER307 / ER309L", tig: "ER307 / ER309L", smaw: "E307 / E309L",
+                preheat: "50°C - 75°C (סילוק לחות)", notes: "פלדה בעלת קשיות וקשיחות גבוהות. חובה לרתך עם מילוי אוסטניטי. יש להקפיד על טמפרטורה בין-מעברית (Interpass) מתחת ל-150°C.",
+                properties: { yield: "~1100", tensile: "~1400", hardness: "420-460 HBW" }
+              },
+              {
+                id: "mars500", name: "MARS 500", mig: "ER307 / ER309L", tig: "ER307 / ER309L", smaw: "E307 / E309L",
+                preheat: "75°C", notes: "שריון בליסטי אופייני. ריתוך בחומרים אוסטניטיים (307/309) בלבד. קלט חום נמוך חיוני למניעת איבוד הקשיות וסדקי מימן.",
+                properties: { yield: "~1200", tensile: "~1500", hardness: "470-530 HBW" }
+              },
+              {
+                id: "mars600", name: "MARS 600", mig: "ER307 / ER309L", tig: "ER307 / ER309L", smaw: "E307 / E309L",
+                preheat: "75°C - 100°C", notes: "קשיות גבוהה מאוד. רגישות קריטית לסדקי מימן תחת ריתוך. אנרגיית ריתוך מינימלית, טמפרטורה בין מעברית גג 100°C - 120°C.",
+                properties: { yield: "~1500", tensile: "~2000", hardness: "570-630 HBW" }
+              },
+              {
+                id: "mars650", name: "MARS 650", mig: "ER307 / ER309L", tig: "ER307 / ER309L", smaw: "E307 / E309L",
+                preheat: "100°C - 120°C", notes: "שריון UHH (אולטרה-קשה). זהירות עליונה בתהליך הריתוך למניעת הרס המבנה הבליסטי ופריכות אזור ה-HAZ. תפרי ריתוך קצרים, קירור מבוקר וחומרי מילוי אוסטניטיים חובה.",
+                properties: { yield: "~1600", tensile: "~2200", hardness: "630-670 HBW" }
+              }
+            ]
+          },
+          {
+            category: "נירוסטה (Stainless Steel)",
+            items: [
+              {
+                id: "ss304", name: "304 / 304L", mig: "ER308L", tig: "ER308L", smaw: "E308L-15/16/17",
+                preheat: "ללא (טמפרטורה בין-מעברית < 150°C)", notes: "פלדת אל-חלד אוסטניטית נפוצה. חובה להשתמש במברשת נירוסטה ייעודית למניעת זיהום ברזל. יש להגביל קלט חום למניעת משקעי קרביד.",
+                properties: { yield: "~205", tensile: "~515", hardness: "~180 HB" }
+              },
+              {
+                id: "ss316", name: "316 / 316L", mig: "ER316L", tig: "ER316L", smaw: "E316L-15/16/17",
+                preheat: "ללא (טמפרטורה בין-מעברית < 150°C)", notes: "עמידות גבוהה לקורוזיה (מכיל מוליבדן). כללי העבודה זהים ל-304.",
+                properties: { yield: "~205", tensile: "~515", hardness: "~180 HB" }
+              },
+              {
+                id: "duplex2205", name: "Duplex 2205", mig: "ER2209", tig: "ER2209", smaw: "E2209",
+                preheat: "ללא (טמפרטורה בין-מעברית < 150°C)", notes: "דורש שליטה מדויקת בקלט חום ובקצב קירור כדי לשמור על יחס תקין של פריט-אוסטניט. ב-TIG מומלץ גז הגנה המכיל אחוזי חנקן.",
+                properties: { yield: "~450", tensile: "~650", hardness: "~290 HB" }
+              }
+            ]
+          },
+          {
+            category: "סגסוגות אלומיניום (Aluminum)",
+            items: [
+              {
+                id: "alu1100", name: "Al 1100 (אלומיניום טהור)", mig: "ER1100 / ER4043", tig: "ER1100 / ER4043", smaw: "לא ישים",
+                preheat: "חימום קל (50°C) לסילוק לחות בלבד", notes: "אלומיניום כמעט טהור. קל מאוד לריתוך, בעל מוליכות חשמלית ותרמית גבוהה במיוחד. משמש בעיקר לכימיקלים ומזון.",
+                properties: { yield: "~35", tensile: "~90", hardness: "~23 HB" }
+              },
+              {
+                id: "alu3003", name: "Al 3003", mig: "ER4043 / ER1100", tig: "ER4043", smaw: "לא ישים",
+                preheat: "חימום קל (50°C)", notes: "סגסוגת נפוצה מאוד (מכילה מנגן) לפחחות וצנרת. ריתוך מצוין עם ER4043 שמונע סדקים.",
+                properties: { yield: "~40", tensile: "~110", hardness: "~28 HB" }
+              },
+              {
+                id: "alu5052", name: "Al 5052", mig: "ER5356 / ER5654", tig: "ER5356", smaw: "לא ישים",
+                preheat: "חימום קל (50°C)", notes: "הסגסוגת הנפוצה ביותר לזיווד ופחים. אזהרה: אין לרתך עם ER4043 עקב סכנה ליצירת מבנה פריך וסדקים (בגלל אינטראקציה בין מגנזיום לסיליקון).",
+                properties: { yield: "~65", tensile: "~190", hardness: "~47 HB" }
+              },
+              {
+                id: "alu5083", name: "Al 5083", mig: "ER5183 / ER5356", tig: "ER5183 / ER5356", smaw: "לא ישים",
+                preheat: "חימום קל עד 50°C (סילוק לחות בלבד)", notes: "סגסוגת מגנזיום, מיועדת לסביבה ימית. אין להשתמש בחומר מילוי ER4043 (סכנה לשבר פריך). חובה להסיר את שכבת האלומינה באזור הריתוך.",
+                properties: { yield: "~145", tensile: "~290", hardness: "~75 HB" }
+              },
+              {
+                id: "alu6061", name: "Al 6061 (T6)", mig: "ER4043 / ER5356", tig: "ER4043 / ER5356", smaw: "E4043 (נדיר)",
+                preheat: "חימום קל עד 50°C (סילוק לחות בלבד)", notes: "ER4043 מומלץ למניעת סדקים וטמפרטורות גבוהות, ER5356 לחוזק וגימור אנודייז. אזור ה-HAZ יאבד מחוזק ה-T6 המקורי. חובה להסיר תחמוצת טרם הריתוך (AC).",
+                properties: { yield: "~275", tensile: "~310", hardness: "~95 HB" }
+              },
+              {
+                id: "alu6063", name: "Al 6063", mig: "ER4043 / ER5356", tig: "ER4043 / ER5356", smaw: "לא ישים",
+                preheat: "חימום קל (50°C)", notes: "סגסוגת נפוצה מאוד לפרופילים אדריכליים (Extrusions). במידה והחלק יעבור אנודייז (ציפוי) לאחר הריתוך, חובה להשתמש ב-ER5356 להתאמת גוון.",
+                properties: { yield: "~145", tensile: "~185", hardness: "~60 HB" }
+              },
+              {
+                id: "cast_a356", name: "Cast Aluminum (A356)", mig: "ER4043 / ER4047", tig: "ER4043 / ER4047", smaw: "לא ישים",
+                preheat: "100°C - 200°C (ליציקות עבות)", notes: "סגסוגת יציקה אופיינית. חומר המילוי ER4047 מציע נזילות גבוהה שעוזרת במניעת סדקים ביציקות. חובה ניקוי יסודי של נקבוביות וזיהומים לפני הריתוך.",
+                properties: { yield: "~165", tensile: "~230", hardness: "~75 HB" }
+              }
+            ]
+          },
+          {
+            category: "סגסוגות טיטניום (Titanium)",
+            items: [
+              {
+                id: "ti2", name: "Titanium Grade 2 (CP)", mig: "ERTi-2", tig: "ERTi-2", smaw: "לא ישים",
+                preheat: "ללא", notes: "רגישות קריטית לזיהום (חמצן/חנקן). דורש הגנת גז (100% ארגון) מוחלטת: דיזה רחבה, Trailing Shield, וגיבוי גז (Back purge) חובה. צבע התפר (כסף) מעיד על איכות ההגנה.",
+                properties: { yield: "~275", tensile: "~345", hardness: "~160 HB" }
+              },
+              {
+                id: "ti5", name: "Titanium Grade 5 (Ti-6Al-4V)", mig: "ERTi-5", tig: "ERTi-5", smaw: "לא ישים",
+                preheat: "ללא", notes: "סגסוגת תעופתית בחוזק גבוה. דרישות הגנת הגז (Shielding) וכללי הניקיון קפדניים ומחמירים באותה מידה כמו ב-Grade 2.",
+                properties: { yield: "~880", tensile: "~950", hardness: "~334 HB" }
+              }
+            ]
+          }
+        ];
+
+        function initWeldSpec() {
+            const catSelect = document.getElementById('weldSpecCategory');
+            const alloyContainer = document.getElementById('weldSpecAlloyContainer');
+            const alloySelect = document.getElementById('weldSpecAlloy');
+            const resContainer = document.getElementById('weldSpecResultContainer');
+            const emptyState = document.getElementById('weldSpecEmptyState');
+
+            materialsDatabase.forEach(cat => {
+                catSelect.add(new Option(cat.category, cat.category));
+            });
+
+            catSelect.addEventListener('change', (e) => {
+                alloySelect.innerHTML = '<option value="" disabled selected>-- הגדר פלדה/סגסוגת --</option>';
+                alloyContainer.classList.remove('opacity-30', 'pointer-events-none');
+                alloySelect.disabled = false;
+                
+                const selectedCat = materialsDatabase.find(c => c.category === e.target.value);
+                if(selectedCat) {
+                    selectedCat.items.forEach(item => {
+                        alloySelect.add(new Option(item.name, item.id));
+                    });
+                }
+                resContainer.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+            });
+
+            alloySelect.addEventListener('change', (e) => {
+                const cat = materialsDatabase.find(c => c.category === catSelect.value);
+                const alloy = cat.items.find(i => i.id === e.target.value);
+                if(alloy) {
+                    document.getElementById('specResName').textContent = alloy.name;
+                    document.getElementById('specResYield').textContent = alloy.properties.yield;
+                    document.getElementById('specResTensile').textContent = alloy.properties.tensile;
+                    document.getElementById('specResHardness').textContent = alloy.properties.hardness;
+                    document.getElementById('specResMig').textContent = alloy.mig;
+                    document.getElementById('specResTig').textContent = alloy.tig;
+                    document.getElementById('specResSmaw').textContent = alloy.smaw;
+                    document.getElementById('specResPreheat').textContent = alloy.preheat;
+                    document.getElementById('specResNotes').textContent = alloy.notes;
+                    
+                    emptyState.classList.add('hidden');
+                    resContainer.classList.remove('hidden');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initWeldSpec();
+            
+            calculateMiter();
+
+            // Setup Weld
+            document.getElementById('weldProc').addEventListener('change', updateWeldOptions);
+            document.getElementById('weldJoint').addEventListener('change', toggleWeldJointParams);
+            ['weldMat', 'weldFiller', 'weldDia', 'weldLen', 'weldSize', 'weldGap', 'weldAngle', 'weldPackWeight'].forEach(id => {
+                document.getElementById(id).addEventListener('input', calculateWeld);
+                document.getElementById(id).addEventListener('change', calculateWeld);
+            });
+            updateWeldOptions();
+
+            // --- Simple Calc ---
             const display = document.getElementById('calcDisplay');
             const history = document.getElementById('calcHistory');
             let cur = '0', prev = '', op = null;
@@ -697,13 +1388,11 @@
                 }
                 else if (action === 'operator') { 
                     if (prev && op && cur !== '0' && !shouldReset) {
-                        let res = safeCalc(prev, op, cur);
-                        if(res !== 'Error') {
+                        try {
+                            let res = eval(`${prev}${op}${cur}`);
                             historyLogs.push(`${prev} ${op} ${cur} = ${res}`);
                             prev = res.toString();
-                        } else {
-                            prev = cur;
-                        }
+                        } catch(err) {}
                     } else {
                         prev = cur; 
                     }
@@ -729,12 +1418,14 @@
                     }
                 }
                 else if (action === 'equals' && op) {
-                    let res = safeCalc(prev, op, cur);
-                    historyLogs.push(`${prev} ${op} ${cur} = ${res}`);
-                    cur = res.toString();
-                    prev = '';
-                    op = null;
-                    shouldReset = true;
+                    try {
+                        let res = eval(`${prev}${op}${cur}`);
+                        historyLogs.push(`${prev} ${op} ${cur} = ${res}`);
+                        cur = res.toString();
+                        prev = '';
+                        op = null;
+                        shouldReset = true;
+                    } catch(e) { cur = 'Error'; }
                 }
                 
                 history.innerHTML = historyLogs.join('<br>');
@@ -742,254 +1433,7 @@
                 updateSimpleCalc();
             });
 
-            // --- Miter Data & Logic ---
-            window.isMiterEqualCut = true;
-            window.setCutType = function(equal) {
-                window.isMiterEqualCut = equal;
-                const btnEqual = document.getElementById('cutTypeEqual');
-                const btnUnequal = document.getElementById('cutTypeUnequal');
-                const widthBContainer = document.getElementById('widthBContainer');
-                const widthALabel = document.getElementById('widthALabel');
-                if (equal) {
-                    btnEqual.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all btn-amber shadow-md";
-                    btnUnequal.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all text-slate-400 hover:text-white";
-                    widthBContainer.classList.add('hidden');
-                    widthALabel.innerText = "רוחב פרופיל";
-                } else {
-                    btnUnequal.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all btn-amber shadow-md";
-                    btnEqual.className = "py-2.5 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all text-slate-400 hover:text-white";
-                    widthBContainer.classList.remove('hidden');
-                    widthALabel.innerText = "פרופיל א'";
-                }
-                window.calculateMiter();
-            };
-
-            window.calculateMiter = function() {
-                let theta = parseFloat(document.getElementById('cornerAngle').value);
-                if (isNaN(theta)) theta = 90;
-                let w1 = parseFloat(document.getElementById('widthA').value) || 50;
-                let w2 = w1;
-                if (!window.isMiterEqualCut) {
-                    w2 = parseFloat(document.getElementById('widthB').value) || 50;
-                }
-                const phi = 180 - theta;
-                const phiRad = (phi * Math.PI) / 180;
-                let s1 = 0, s2 = 0;
-                if (window.isMiterEqualCut) { s1 = phi / 2; s2 = phi / 2; } 
-                else {
-                    const num = w2 - w1 * Math.cos(phiRad);
-                    const den = w1 * Math.sin(phiRad);
-                    const s1Rad = Math.atan2(num, den);
-                    s1 = (s1Rad * 180) / Math.PI;
-                    s2 = phi - s1;
-                }
-                document.getElementById('angleAResult').innerText = s1.toFixed(1) + "°";
-                document.getElementById('angleBResult').innerText = s2.toFixed(1) + "°";
-                document.getElementById('internalAResult').innerText = (90 - s1).toFixed(1) + "°";
-                document.getElementById('internalBResult').innerText = (90 - s2).toFixed(1) + "°";
-                drawMiterDiagram(theta, w1, w2, s1, s2);
-            };
-
-            function drawMiterDiagram(theta, w1, w2, s1, s2) {
-                const M = 2.5; 
-                const pin = { x: 250 * M, y: 250 * M };
-                const maxW = Math.max(w1, w2);
-                const scale = (100 * M) / maxW;
-                const dw1 = Math.max(20 * M, w1 * scale);
-                const dw2 = Math.max(20 * M, w2 * scale);
-                const phiRad = ((180 - theta) * Math.PI) / 180;
-                const s1Rad = (s1 * Math.PI) / 180;
-                const s2Rad = (s2 * Math.PI) / 180;
-                const outX = pin.x + dw1 * Math.tan(s1Rad);
-                const outY = pin.y - dw1;
-                const pout = { x: outX, y: outY };
-                const L = 180 * M; 
-                const d2 = { x: -Math.cos(phiRad), y: -Math.sin(phiRad) };
-                const n2 = { x: Math.sin(phiRad), y: -Math.cos(phiRad) };
-                const outerEndA = { x: pin.x + L, y: pin.y - dw1 };
-                const innerEndA = { x: pin.x + L, y: pin.y };
-                const polyAPoints = `${pin.x},${pin.y} ${pout.x},${pout.y} ${outerEndA.x},${outerEndA.y} ${innerEndA.x},${innerEndA.y}`;
-                const innerEndB = { x: pin.x + L * d2.x, y: pin.y + L * d2.y };
-                const outerEndB = { x: innerEndB.x + dw2 * n2.x, y: innerEndB.y + dw2 * n2.y };
-                const polyBPoints = `${pin.x},${pin.y} ${pout.x},${pout.y} ${outerEndB.x},${outerEndB.y} ${innerEndB.x},${innerEndB.y}`;
-                
-                const arcR = 40 * M;
-                const sweepAngle = 180 - theta;
-                const arcEnd = { x: pin.x + arcR * Math.cos((180 - sweepAngle) * Math.PI / 180), y: pin.y - arcR * Math.sin((180 - sweepAngle) * Math.PI / 180) };
-                const largeArcFlag = sweepAngle > 180 ? 1 : 0;
-                const midAngleRad = ((180 - (sweepAngle / 2)) * Math.PI) / 180;
-                const textR = arcR + 20 * M;
-                const textX = pin.x + textR * Math.cos(midAngleRad);
-                const textY = pin.y + textR * Math.sin(midAngleRad);
-                
-                const intA = (90 - s1).toFixed(1) + '°';
-                const intB = (90 - s2).toFixed(1) + '°';
-
-                const textAX = outerEndA.x + 15 * M;
-                const textBX = (outerEndB.x + innerEndB.x)/2 + d2.x * 15 * M;
-
-                const safeDistA = dw1 * Math.tan(s1Rad) + 35 * M;
-                const safeDistB = dw2 * Math.tan(s2Rad) + 35 * M;
-                
-                const intTextAX = pin.x + safeDistA;
-                const intTextAY = pin.y - dw1 / 2; 
-                const intTextBX = pin.x + d2.x * safeDistB + n2.x * dw2 / 2;
-                const intTextBY = pin.y + d2.y * safeDistB + n2.y * dw2 / 2;
-
-                const xs = [pin.x, pout.x, outerEndA.x, innerEndA.x, outerEndB.x, innerEndB.x, textX, textAX, textBX, intTextAX, intTextBX];
-                const ys = [pin.y, pout.y, outerEndA.y, innerEndA.y, outerEndB.y, innerEndB.y, textY, intTextAY, intTextBY];
-                const pad = 40 * M;
-                const vMinX = Math.min(...xs) - pad;
-                const vMinY = Math.min(...ys) - pad;
-                const vW = Math.max(...xs) - Math.min(...xs) + pad * 2;
-                const vH = Math.max(...ys) - Math.min(...ys) + pad * 2;
-                
-                document.getElementById('miterSvg').setAttribute('viewBox', `${vMinX} ${vMinY} ${vW} ${vH}`);
-
-                const svgHtml = `
-                    <polygon points="${polyAPoints}" class="cad-fill-shade" stroke="#ffffff" stroke-width="${1.5 * M}" vector-effect="non-scaling-stroke" />
-                    <polygon points="${polyBPoints}" class="cad-fill-shade" stroke="#ffffff" stroke-width="${1.5 * M}" vector-effect="non-scaling-stroke" />
-                    <line x1="${pin.x}" y1="${pin.y}" x2="${pout.x}" y2="${pout.y}" class="cad-line-center" stroke-width="${2 * M}" vector-effect="non-scaling-stroke" />
-                    
-                    <path d="M ${pin.x + arcR} ${pin.y} A ${arcR} ${arcR} 0 ${largeArcFlag} 0 ${arcEnd.x} ${arcEnd.y}" class="cad-line-dim" stroke-width="${1 * M}" vector-effect="non-scaling-stroke" />
-                    <text x="${textX}" y="${textY}" class="svg-label cad-text-dim" style="font-size:${14 * M}px;" text-anchor="middle" dominant-baseline="central">${theta}°</text>
-                    <circle cx="${pin.x}" cy="${pin.y}" r="${3 * M}" fill="#ffffff" />
-                    
-                    <line x1="${outerEndA.x + 10*M}" y1="${outerEndA.y}" x2="${innerEndA.x + 10*M}" y2="${innerEndA.y}" stroke="#3b82f6" stroke-width="${1 * M}" stroke-dasharray="${2*M},${2*M}" vector-effect="non-scaling-stroke"/>
-                    <text x="${textAX}" y="${(outerEndA.y + innerEndA.y)/2}" class="svg-label cad-text-dim" style="font-size:${12 * M}px;" dominant-baseline="central">${w1}</text>
-                    
-                    <line x1="${outerEndB.x + d2.x*10*M}" y1="${outerEndB.y + d2.y*10*M}" x2="${innerEndB.x + d2.x*10*M}" y2="${innerEndB.y + d2.y*10*M}" stroke="#3b82f6" stroke-width="${1 * M}" stroke-dasharray="${2*M},${2*M}" vector-effect="non-scaling-stroke"/>
-                    <text x="${textBX}" y="${(outerEndB.y + innerEndB.y)/2 + d2.y*15*M}" class="svg-label cad-text-dim" style="font-size:${12 * M}px;" text-anchor="middle" dominant-baseline="central">${w2}</text>
-                    
-                    <text x="${intTextAX}" y="${intTextAY}" class="svg-label" style="fill:#10b981; font-size:${11 * M}px;" dominant-baseline="central" text-anchor="middle">${intA}</text>
-                    <text x="${intTextBX}" y="${intTextBY}" class="svg-label" style="fill:#10b981; font-size:${11 * M}px;" dominant-baseline="central" text-anchor="middle">${intB}</text>
-                `;
-                document.getElementById('miterSvg').innerHTML = svgHtml;
-            }
-
-            // --- Weld Calculator ---
-            const WELD_FILLER_TYPES = {
-                smaw: [{ id: '6010', name: 'E6010 / E6011', eff: 0.55 }, { id: '7018', name: 'E7018', eff: 0.65 }, { id: '7024', name: 'E7024', eff: 0.70 }],
-                gmaw: [{ id: 'er70s', name: 'חוט מלא ER70S', eff: 0.95 }, { id: 'alum', name: 'חוט אלומיניום', eff: 0.90 }],
-                fcaw: [{ id: 'rutile', name: 'חוט ממולא רוטיל', eff: 0.85 }, { id: 'metal', name: 'חוט ממולא מתכת', eff: 0.90 }],
-                gtaw: [{ id: 'rod', name: 'מוט טיג', eff: 0.98 }]
-            };
-            const WELD_DIAS = {
-                smaw: [2.0, 2.5, 3.2, 4.0, 5.0],
-                gmaw: [0.6, 0.8, 1.0, 1.2, 1.6],
-                fcaw: [1.0, 1.2, 1.4, 1.6, 2.0],
-                gtaw: [1.6, 2.0, 2.4, 3.2, 4.0]
-            };
-
-            function updateWeldOptions() {
-                const proc = document.getElementById('weldProc').value;
-                const fillSel = document.getElementById('weldFiller');
-                const diaSel = document.getElementById('weldDia');
-                fillSel.innerHTML = '';
-                WELD_FILLER_TYPES[proc].forEach(f => fillSel.add(new Option(f.name, f.id)));
-                diaSel.innerHTML = '';
-                WELD_DIAS[proc].forEach(d => diaSel.add(new Option(d.toFixed(1), d)));
-                diaSel.selectedIndex = Math.floor(WELD_DIAS[proc].length / 2);
-                document.getElementById('weldPackWeight').value = (proc === 'smaw' || proc === 'gtaw') ? 5 : 15;
-                calculateWeld();
-            }
-
-            function toggleWeldJointParams() {
-                const joint = document.getElementById('weldJoint').value;
-                const vParams = document.getElementById('vGrooveParams');
-                const sizeLabel = document.getElementById('weldSizeLabel');
-                const throatContainer = document.getElementById('resWeldThroatContainer');
-                if (joint === 'fillet') {
-                    vParams.classList.add('hidden');
-                    sizeLabel.innerText = "מידת ניצב (mm)";
-                    throatContainer.classList.remove('hidden');
-                } else {
-                    vParams.classList.remove('hidden');
-                    sizeLabel.innerText = "עובי החומר (mm)";
-                    throatContainer.classList.add('hidden');
-                }
-                calculateWeld();
-            }
-
-            function calculateWeld() {
-                const matDensity = parseFloat(document.getElementById('weldMat').value) || 7.85;
-                const proc = document.getElementById('weldProc').value;
-                const fillerId = document.getElementById('weldFiller').value;
-                const jointType = document.getElementById('weldJoint').value;
-                const len = parseFloat(document.getElementById('weldLen').value) || 0;
-                const size = parseFloat(document.getElementById('weldSize').value) || 0;
-                const packWeight = parseFloat(document.getElementById('weldPackWeight').value) || 1;
-                const currentFiller = WELD_FILLER_TYPES[proc].find(f => f.id === fillerId) || WELD_FILLER_TYPES[proc][0];
-                const eff = currentFiller.eff;
-
-                let area = 0;
-                if (jointType === 'fillet') {
-                    area = (0.5 * size * size) * 1.1; 
-                    document.getElementById('resWeldThroat').innerText = (size * 0.7071).toFixed(1) + " mm";
-                    renderWeldSvg('fillet', size);
-                } else {
-                    const gap = parseFloat(document.getElementById('weldGap').value) || 0;
-                    const angle = parseFloat(document.getElementById('weldAngle').value) || 0;
-                    const rootArea = gap * size;
-                    const angleRad = (angle / 2) * (Math.PI / 180);
-                    const grooveArea = Math.pow(size, 2) * Math.tan(angleRad);
-                    area = (rootArea + grooveArea) * 1.1;
-                    renderWeldSvg('v_groove', size, gap, angle);
-                }
-
-                if (area === 0 || len === 0) {
-                    document.getElementById('resWeldReq').innerText = "0.00 kg";
-                    document.getElementById('resWeldEff').innerText = (eff * 100).toFixed(0) + "%";
-                    document.getElementById('resWeldPacks').innerText = "0";
-                    return;
-                }
-
-                const theoW = (area * len * matDensity) / 1000;
-                const reqW = theoW / eff;
-                const packs = Math.ceil(reqW / packWeight);
-                document.getElementById('resWeldReq').innerText = reqW.toFixed(2) + " kg";
-                document.getElementById('resWeldEff').innerText = (eff * 100).toFixed(0) + "%";
-                document.getElementById('resWeldPacks').innerText = packs;
-            }
-
-            function renderWeldSvg(type, size, gap, angle) {
-                const svgContainer = document.getElementById('weldSvgContainer');
-                if (type === 'fillet') {
-                    svgContainer.innerHTML = `
-                        <svg viewBox="0 0 100 80" class="w-full h-full max-h-[140px]">
-                            <path d="M 20 10 L 40 10 L 40 70 L 90 70 L 90 90 L 20 90 Z" class="cad-fill-shade" stroke="#ffffff" stroke-width="1.5" vector-effect="non-scaling-stroke" />
-                            <path d="M 40 30 Q 60 50 70 70 L 40 70 Z" class="cad-weld-fill" />
-                            <line x1="35" y1="30" x2="25" y2="30" class="cad-line-dim" vector-effect="non-scaling-stroke" />
-                            <line x1="35" y1="70" x2="25" y2="70" class="cad-line-dim" vector-effect="non-scaling-stroke" />
-                            <line x1="30" y1="30" x2="30" y2="70" stroke="#3b82f6" stroke-width="0.75" vector-effect="non-scaling-stroke" />
-                            <text x="15" y="52" class="svg-label cad-text-dim">a=${size}</text>
-                        </svg>
-                    `;
-                } else {
-                    svgContainer.innerHTML = `
-                        <svg viewBox="0 0 100 80" class="w-full h-full max-h-[140px]">
-                            <path d="M 5 20 L 40 20 L 48 70 L 5 70 Z" class="cad-fill-shade" stroke="#ffffff" stroke-width="1.5" vector-effect="non-scaling-stroke" />
-                            <path d="M 95 20 L 60 20 L 52 70 L 95 70 Z" class="cad-fill-shade" stroke="#ffffff" stroke-width="1.5" vector-effect="non-scaling-stroke" />
-                            <path d="M 40 20 Q 50 15 60 20 L 52 70 L 48 70 Z" class="cad-weld-fill" />
-                            <line x1="48" y1="75" x2="48" y2="85" class="cad-line-dim" vector-effect="non-scaling-stroke" />
-                            <line x1="52" y1="75" x2="52" y2="85" class="cad-line-dim" vector-effect="non-scaling-stroke" />
-                            <line x1="48" y1="80" x2="52" y2="80" stroke="#3b82f6" stroke-width="0.75" vector-effect="non-scaling-stroke" />
-                            <text x="50" y="90" class="svg-label cad-text-dim" text-anchor="middle">g=${gap}</text>
-                            <path d="M 45 15 A 20 20 0 0 1 55 15" fill="none" stroke="#3b82f6" stroke-width="0.75" vector-effect="non-scaling-stroke" />
-                            <text x="50" y="10" class="svg-label cad-text-dim" text-anchor="middle">${angle}°</text>
-                        </svg>
-                    `;
-                }
-            }
-
-            document.getElementById('weldProc').addEventListener('change', updateWeldOptions);
-            document.getElementById('weldJoint').addEventListener('change', toggleWeldJointParams);
-            ['weldMat', 'weldFiller', 'weldDia', 'weldLen', 'weldSize', 'weldGap', 'weldAngle', 'weldPackWeight'].forEach(id => {
-                document.getElementById(id).addEventListener('input', calculateWeld);
-                document.getElementById(id).addEventListener('change', calculateWeld);
-            });
-
-            // --- Diagonal Calc ---
+            // --- Diagonal ---
             function drawDiagonalDiagramDefault() {
                 const svg = document.getElementById('diagonalSvg');
                 if (!svg) return;
@@ -1016,19 +1460,24 @@
                 const rectH = h * scale;
                 const x = cx - rectW / 2;
                 const y = cy - rectH / 2;
+
                 const diagAngleRad = Math.atan2(rectH, rectW);
                 const diagAngleDeg = (diagAngleRad * 180 / Math.PI) * -1;
+
                 svg.innerHTML = `
                     <rect x="${x}" y="${y}" width="${rectW}" height="${rectH}" class="cad-line-main" vector-effect="non-scaling-stroke"/>
                     <path d="M ${x} ${y + rectH} L ${x + rectW} ${y}" class="cad-line-dim" vector-effect="non-scaling-stroke"/>
+                    
                     <line x1="${x}" y1="${y-3}" x2="${x}" y2="${y-10}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
                     <line x1="${x+rectW}" y1="${y-3}" x2="${x+rectW}" y2="${y-10}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
                     <line x1="${x}" y1="${y-6}" x2="${x+rectW}" y2="${y-6}" stroke="#3b82f6" stroke-width="0.75" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>
                     <text x="${cx}" y="${y-10}" class="svg-label cad-text-dim" style="font-size: 8px;" text-anchor="middle">${w}</text>
+                    
                     <line x1="${x-3}" y1="${y}" x2="${x-10}" y2="${y}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
                     <line x1="${x-3}" y1="${y+rectH}" x2="${x-10}" y2="${y+rectH}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
                     <line x1="${x-6}" y1="${y}" x2="${x-6}" y2="${y+rectH}" stroke="#3b82f6" stroke-width="0.75" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>
                     <text x="${x-10}" y="${cy}" class="svg-label cad-text-dim" style="font-size: 8px;" transform="rotate(-90, ${x-10}, ${cy})" text-anchor="middle">${h}</text>
+                    
                     <text x="${cx}" y="${cy}" class="svg-label cad-text-obj" style="font-size: 9px; font-weight: bold;" transform="rotate(${diagAngleDeg}, ${cx}, ${cy}) translate(0, -4)" text-anchor="middle">${diag.toFixed(1)}</text>
                 `;
             }
@@ -1037,6 +1486,7 @@
                 const a = parseFloat(document.getElementById('diagWidth').value);
                 const b = parseFloat(document.getElementById('diagHeight').value);
                 const resContainer = document.getElementById('diagonalResultContainer');
+                
                 if (!isNaN(a) && !isNaN(b) && a > 0 && b > 0) {
                     const diag = Math.sqrt(a*a + b*b);
                     document.getElementById('diagonalResult').textContent = diag.toFixed(2);
@@ -1050,7 +1500,12 @@
             
             document.getElementById('diagWidth').addEventListener('input', calculateDiagonal);
             document.getElementById('diagHeight').addEventListener('input', calculateDiagonal);
-            document.getElementById('diagonalForm').addEventListener('submit', (e) => { e.preventDefault(); calculateDiagonal(); });
+            document.getElementById('diagonalForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                calculateDiagonal();
+            });
+
+            drawDiagonalDiagramDefault();
 
             // --- Rect Draw ---
             function drawRectDrawDiagramDefault() {
@@ -1081,24 +1536,30 @@
                 const x = cx - rectW / 2;
                 const y = cy - rectH / 2;
                 const angleRad = angleDeg * Math.PI / 180;
+
                 const arcR = Math.min(25, rectW * 0.4, rectH * 0.8);
                 const arcStartX = x + arcR;
                 const arcStartY = y + rectH;
                 const arcEndX = x + arcR * Math.cos(angleRad);
                 const arcEndY = y + rectH - arcR * Math.sin(angleRad);
+                
                 const textR = arcR + 8;
                 const textAngleRad = angleRad / 2;
                 const textX = x + textR * Math.cos(textAngleRad);
                 const textY = y + rectH - textR * Math.sin(textAngleRad);
+
                 svg.innerHTML = `
                     <rect x="${x}" y="${y}" width="${rectW}" height="${rectH}" class="cad-line-main" vector-effect="non-scaling-stroke"/>
                     <path d="M ${x} ${y + rectH} L ${x + rectW} ${y}" class="cad-line-dim" vector-effect="non-scaling-stroke"/>
+                    
                     <path d="M ${arcStartX} ${arcStartY} A ${arcR} ${arcR} 0 0 0 ${arcEndX} ${arcEndY}" stroke="#f59e0b" stroke-width="0.75" fill="none" vector-effect="non-scaling-stroke"/>
                     <text x="${textX}" y="${textY}" class="svg-label cad-text-dim" style="font-size: 6px;" text-anchor="middle" dominant-baseline="central">${angleDeg.toFixed(1)}°</text>
+
                     <line x1="${x}" y1="${y-3}" x2="${x}" y2="${y-10}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
                     <line x1="${x+rectW}" y1="${y-3}" x2="${x+rectW}" y2="${y-10}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
                     <line x1="${x}" y1="${y-6}" x2="${x+rectW}" y2="${y-6}" stroke="#3b82f6" stroke-width="0.75" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>
                     <text x="${cx}" y="${y-10}" class="svg-label cad-text-dim" style="font-size: 8px;" text-anchor="middle">${w.toFixed(1)}</text>
+                    
                     <line x1="${x-3}" y1="${y}" x2="${x-10}" y2="${y}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
                     <line x1="${x-3}" y1="${y+rectH}" x2="${x-10}" y2="${y+rectH}" stroke="#555" stroke-width="0.75" vector-effect="non-scaling-stroke"/>
                     <line x1="${x-6}" y1="${y}" x2="${x-6}" y2="${y+rectH}" stroke="#3b82f6" stroke-width="0.75" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>
@@ -1111,15 +1572,26 @@
                 const len = parseFloat(document.getElementById('rectDrawSideLength').value);
                 const angleDeg = parseFloat(document.getElementById('rectDrawAngle').value);
                 const resContainer = document.getElementById('rectDrawResultContainer');
+
                 if (!isNaN(len) && !isNaN(angleDeg) && len > 0 && angleDeg > 0 && angleDeg < 90) {
                     const angleRad = angleDeg * (Math.PI / 180);
                     let w, h, c;
-                    if (side === 'a') { w = len; h = w * Math.tan(angleRad); c = w / Math.cos(angleRad); } 
-                    else { h = len; w = h / Math.tan(angleRad); c = h / Math.sin(angleRad); }
+                    
+                    if (side === 'a') { 
+                        w = len; 
+                        h = w * Math.tan(angleRad); 
+                        c = w / Math.cos(angleRad); 
+                    } else { 
+                        h = len; 
+                        w = h / Math.tan(angleRad); 
+                        c = h / Math.sin(angleRad); 
+                    }
+                    
                     document.getElementById('resA').textContent = w.toFixed(1);
                     document.getElementById('resB').textContent = h.toFixed(1);
                     document.getElementById('resC').textContent = c.toFixed(1);
                     resContainer.classList.remove('hidden');
+                    
                     drawRectDrawDiagram(w, h, c, angleDeg);
                 } else {
                     resContainer.classList.add('hidden');
@@ -1130,21 +1602,13 @@
             document.getElementById('rectDrawInputSide').addEventListener('change', calculateRectDraw);
             document.getElementById('rectDrawSideLength').addEventListener('input', calculateRectDraw);
             document.getElementById('rectDrawAngle').addEventListener('input', calculateRectDraw);
-            document.getElementById('rectDrawForm').addEventListener('submit', (e) => { e.preventDefault(); calculateRectDraw(); });
-
-            // --- Stairs ---
-            document.getElementById('stairForm').addEventListener('submit', (e) => {
+            
+            document.getElementById('rectDrawForm').addEventListener('submit', (e) => {
                 e.preventDefault();
-                const h = parseFloat(document.getElementById('stairH').value);
-                let n = parseInt(document.getElementById('stairN').value);
-                if (!n) n = Math.round(h / 17);
-                const r = h / n;
-                const t = 63 - (2 * r);
-                document.getElementById('resSN').textContent = n;
-                document.getElementById('resSR').textContent = r.toFixed(2) + ' cm';
-                document.getElementById('resST').textContent = t.toFixed(2) + ' cm';
-                document.getElementById('stairResultContainer').classList.remove('hidden');
+                calculateRectDraw();
             });
+
+            drawRectDrawDiagramDefault();
 
             // --- Spacing ---
             function drawSpacingDiagram() {
@@ -1153,11 +1617,15 @@
                 const N = parseInt(document.getElementById('spaceNumPickets').value);
                 const type = document.getElementById('spaceType').value;
                 const svg = document.getElementById('spacingSvg');
+
                 if(isNaN(W) || isNaN(M) || isNaN(N) || N <= 0) return;
+
                 let gaps, S;
                 if (type === 'withEdges') { gaps = N + 1; S = (W - (N * M)) / gaps; } 
                 else { gaps = N - 1; S = (W - (N * M)) / gaps; }
+                
                 if (S < 0) return;
+
                 const scale = 90 / W; const pW = M * scale; const gW = S * scale;
                 let html = `<rect x="5" y="15" width="90" height="15" class="cad-line-dim" vector-effect="non-scaling-stroke"/><line x1="5" y1="10" x2="95" y2="10" class="cad-line-center" vector-effect="non-scaling-stroke"/>`;
                 let cx = 5;
@@ -1203,7 +1671,9 @@
                 const type = document.getElementById('beamType').value;
                 const sizeSel = document.getElementById('beamSize');
                 sizeSel.innerHTML = '';
-                Object.keys(BEAM_DATA[type]).forEach(size => { sizeSel.add(new Option(size, size)); });
+                Object.keys(BEAM_DATA[type]).forEach(size => {
+                    sizeSel.add(new Option(size, size));
+                });
                 calculateWeight();
             }
 
@@ -1225,45 +1695,73 @@
                 const svg = document.getElementById('weightSvg');
                 if(!svg) return;
                 svg.setAttribute('viewBox', '0 0 200 150');
+                
                 let html = '';
                 if(mode === 'plate') {
                     html = `
+                        <!-- Top Face -->
                         <path d="M 40,105 L 100,105 L 150,75 L 90,75 Z" fill="#334155" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+                        <!-- Side Face -->
                         <path d="M 100,105 L 150,75 L 150,95 L 100,125 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+                        <!-- Front Face -->
                         <path d="M 40,105 L 100,105 L 100,125 L 40,125 Z" fill="#1e293b" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+
+                        <!-- Dimensions -->
                         <line x1="40" y1="130" x2="100" y2="130" class="cad-line-dim" vector-effect="non-scaling-stroke" />
                         <text x="70" y="140" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">W: ${w || 0}</text>
+
                         <line x1="35" y1="105" x2="35" y2="125" class="cad-line-dim" vector-effect="non-scaling-stroke" />
                         <text x="25" y="117" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">t: ${d || 0}</text>
+
                         <line x1="105" y1="130" x2="155" y2="100" class="cad-line-dim" vector-effect="non-scaling-stroke" />
                         <text x="135" y="120" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">L: ${l || 0}</text>
                     `;
                 } else {
                     if(beamType === 'UNP') {
                         html = `
+                            <!-- Top Face -->
                             <path d="M 50,60 L 110,25 L 150,25 L 90,60 Z" fill="#334155" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <!-- Bottom Face Top Flange -->
                             <path d="M 58,68 L 118,33 L 150,33 L 90,68 Z" fill="#020617" stroke="#ffffff" stroke-width="1" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <!-- Inside Web -->
                             <path d="M 58,68 L 118,33 L 118,77 L 58,112 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <!-- Top Face Bottom Flange -->
                             <path d="M 58,112 L 118,77 L 150,77 L 90,112 Z" fill="#1e293b" stroke="#ffffff" stroke-width="1" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <!-- Right Face Top Flange -->
                             <path d="M 90,60 L 150,25 L 150,33 L 90,68 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <!-- Right Face Bottom Flange -->
                             <path d="M 90,112 L 150,77 L 150,85 L 90,120 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <!-- Front Face -->
                             <path d="M 50,120 h40 v-8 h-32 v-44 h32 v-8 h-40 Z" fill="#1e293b" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+
+                            <!-- Dimensions -->
                             <line x1="95" y1="125" x2="155" y2="90" class="cad-line-dim" vector-effect="non-scaling-stroke" />
                             <text x="135" y="115" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">L: ${l || 0}</text>
+                            
                             <line x1="45" y1="120" x2="45" y2="60" class="cad-line-dim" vector-effect="non-scaling-stroke" />
                             <text x="35" y="90" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">${beamType} ${size}</text>
                         `;
                     } else {
                         html = `
+                            <!-- Top Face -->
                             <path d="M 50,60 L 110,25 L 150,25 L 90,60 Z" fill="#334155" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <!-- Bottom surface of top flange -->
                             <path d="M 73,68 L 133,33 L 150,33 L 90,68 Z" fill="#020617" stroke="#ffffff" stroke-width="1" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <!-- Right Face Web -->
                             <path d="M 73,68 L 133,33 L 133,77 L 73,112 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <!-- Top surface of bottom flange -->
                             <path d="M 73,112 L 133,77 L 150,77 L 90,112 Z" fill="#1e293b" stroke="#ffffff" stroke-width="1" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <!-- Right Face Top Flange -->
                             <path d="M 90,60 L 150,25 L 150,33 L 90,68 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <!-- Right Face Bottom Flange -->
                             <path d="M 90,112 L 150,77 L 150,85 L 90,120 Z" fill="#0f172a" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                            <!-- Front Face -->
                             <path d="M 50,120 h40 v-8 h-17 v-44 h17 v-8 h-40 v8 h17 v44 h-17 Z" fill="#1e293b" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+
+                            <!-- Dimensions -->
                             <line x1="95" y1="125" x2="155" y2="90" class="cad-line-dim" vector-effect="non-scaling-stroke" />
                             <text x="135" y="115" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">L: ${l || 0}</text>
+                            
                             <line x1="45" y1="120" x2="45" y2="60" class="cad-line-dim" vector-effect="non-scaling-stroke" />
                             <text x="35" y="90" class="svg-label cad-text-dim" text-anchor="middle" style="font-size:8px;">${beamType} ${size}</text>
                         `;
@@ -1275,6 +1773,7 @@
             function calculateWeight() {
                 const mode = document.getElementById('weightMode').value;
                 let weight = 0;
+                
                 if(mode === 'plate') {
                     const l = parseFloat(document.getElementById('wL').value) || 0;
                     const w = parseFloat(document.getElementById('wW').value) || 0;
@@ -1290,12 +1789,14 @@
                     weight = (l / 1000) * kgPerMeter;
                     drawWeightSvg('beam', 0, 0, l, type, size);
                 }
+                
                 document.getElementById('resW').textContent = weight.toFixed(2);
                 document.getElementById('weightRes').classList.remove('hidden');
             }
 
             document.getElementById('weightMode').addEventListener('change', toggleWeightMode);
             document.getElementById('beamType').addEventListener('change', updateBeamSizes);
+            
             ['wL', 'wW', 'wD', 'mat', 'beamL', 'beamSize'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) {
@@ -1303,15 +1804,129 @@
                     el.addEventListener('change', calculateWeight);
                 }
             });
-            document.getElementById('weightForm').addEventListener('submit', (e) => { e.preventDefault(); calculateWeight(); });
 
-            // Init calls
-            updateWeldOptions();
-            window.calculateMiter();
-            drawDiagonalDiagramDefault();
-            drawRectDrawDiagramDefault();
+            document.getElementById('weightForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                calculateWeight();
+            });
+
+            // פונקציות אתחול
             updateBeamSizes();
             toggleWeightMode();
+
+            // --- Profile Cutting Optimization (1D Bin Packing FFD) ---
+            let optParts = [{ id: Date.now(), len: 1000, qty: 1 }];
+
+            function renderOptParts() {
+                const container = document.getElementById('optPartsContainer');
+                container.innerHTML = '';
+                optParts.forEach((p) => {
+                    const row = document.createElement('div');
+                    row.className = "flex gap-2 items-center";
+                    row.innerHTML = `
+                        <input type="number" min="1" value="${p.len}" onchange="updateOptPart(${p.id}, 'len', this.value)" class="w-1/2 p-2.5 input-field rounded-lg bg-slate-950 text-center font-mono text-sm" placeholder="אורך">
+                        <input type="number" min="1" value="${p.qty}" onchange="updateOptPart(${p.id}, 'qty', this.value)" class="w-1/4 p-2.5 input-field rounded-lg bg-slate-950 text-center font-mono text-sm" placeholder="כמות">
+                        <button onclick="removeOptPart(${p.id})" class="w-1/4 p-2.5 bg-rose-500/10 text-rose-500 border border-rose-500/20 rounded-lg hover:bg-rose-500 hover:text-white transition-colors text-sm">🗑️</button>
+                    `;
+                    container.appendChild(row);
+                });
+            }
+
+            window.updateOptPart = function(id, field, val) {
+                const part = optParts.find(p => p.id === id);
+                if(part) part[field] = parseFloat(val) || 0;
+            };
+
+            window.removeOptPart = function(id) {
+                optParts = optParts.filter(p => p.id !== id);
+                renderOptParts();
+            };
+
+            document.getElementById('optAddPartBtn').addEventListener('click', () => {
+                optParts.push({ id: Date.now(), len: 1000, qty: 1 });
+                renderOptParts();
+            });
+
+            document.getElementById('optCalculateBtn').addEventListener('click', () => {
+                const stockLen = parseFloat(document.getElementById('optStockLen').value) || 6000;
+                const kerf = parseFloat(document.getElementById('optKerf').value) || 3;
+
+                let pieces = [];
+                optParts.forEach(p => {
+                    if(p.len > 0 && p.qty > 0) {
+                        for(let i=0; i<p.qty; i++) { pieces.push(p.len); }
+                    }
+                });
+
+                // סינון חלקים ארוכים מהמלאי
+                pieces = pieces.filter(len => len <= stockLen);
+                
+                // מיון יורד לאופטימיזציה FFD (First Fit Decreasing)
+                pieces.sort((a, b) => b - a);
+
+                let bars = [];
+                pieces.forEach(piece => {
+                    let placed = false;
+                    for(let i=0; i<bars.length; i++) {
+                        let requiredSpace = bars[i].cuts.length > 0 ? piece + kerf : piece;
+                        if (bars[i].remaining >= requiredSpace) {
+                            bars[i].cuts.push(piece);
+                            bars[i].remaining -= requiredSpace;
+                            placed = true;
+                            break;
+                        }
+                    }
+                    if(!placed) {
+                        bars.push({ stock: stockLen, cuts: [piece], remaining: stockLen - piece });
+                    }
+                });
+
+                if(bars.length === 0) return;
+
+                let totalStock = bars.length * stockLen;
+                let totalUsedMaterial = pieces.reduce((a, b) => a + b, 0); 
+                let totalWastePercent = ((totalStock - totalUsedMaterial) / totalStock) * 100;
+
+                document.getElementById('optEmptyState').classList.add('hidden');
+                document.getElementById('optResultsContainer').classList.remove('hidden');
+                document.getElementById('optResBars').textContent = bars.length;
+                document.getElementById('optResWaste').textContent = totalWastePercent.toFixed(1) + '%';
+
+                const visualsContainer = document.getElementById('optBarsVisuals');
+                visualsContainer.innerHTML = '';
+
+                bars.forEach((bar, bIdx) => {
+                    const barDiv = document.createElement('div');
+                    let barHtml = `<div class="flex justify-between text-[10px] sm:text-xs text-slate-400 mb-1 font-mono">
+                        <span>מוט ${bIdx + 1}</span>
+                        <span>שארית: <span class="${bar.remaining > 0 ? 'text-emerald-400' : 'text-slate-500'}">${bar.remaining.toFixed(1)}mm</span></span>
+                    </div>`;
+
+                    barHtml += `<div class="w-full h-8 sm:h-10 bg-slate-950 rounded-md overflow-hidden flex border border-slate-700 shadow-inner relative">`;
+
+                    bar.cuts.forEach((cut, cIdx) => {
+                        const cutPct = (cut / stockLen) * 100;
+                        barHtml += `<div style="width: ${cutPct}%" class="h-full bg-gradient-to-r from-amber-500 to-amber-600 border-r border-slate-900 flex items-center justify-center text-[10px] sm:text-xs font-black text-slate-950 overflow-hidden whitespace-nowrap px-1 shrink-0 transition-all hover:brightness-110" title="${cut}mm">${cut}</div>`;
+
+                        if (cIdx < bar.cuts.length - 1) {
+                             const kerfPct = (kerf / stockLen) * 100;
+                             barHtml += `<div style="width: ${kerfPct}%" class="h-full bg-rose-500/80 shrink-0" title="פחת מסור: ${kerf}mm"></div>`;
+                        }
+                    });
+
+                    if (bar.remaining > 0) {
+                         const remPct = (bar.remaining / stockLen) * 100;
+                         barHtml += `<div style="width: ${remPct}%" class="h-full bg-slate-800/50 flex items-center justify-center text-[10px] sm:text-xs text-slate-500 overflow-hidden whitespace-nowrap opacity-50 shrink-0">שארית</div>`;
+                    }
+
+                    barHtml += `</div>`;
+                    barDiv.innerHTML = barHtml;
+                    visualsContainer.appendChild(barDiv);
+                });
+            });
+
+            // רינדור ראשוני
+            renderOptParts();
         });
     </script>
 </body>
